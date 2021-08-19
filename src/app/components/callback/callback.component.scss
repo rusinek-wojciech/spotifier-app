@@ -1,0 +1,54 @@
+.wrapper {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: rgb(29, 185, 84);
+  background: linear-gradient(
+    218deg,
+    rgba(29, 185, 84, 1) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+}
+
+mat-card {
+  margin-top: 4rem;
+  min-width: 16rem;
+  border-radius: 1rem;
+}
+
+mat-card-header {
+  margin-bottom: 1rem;
+}
+
+.header-image {
+  background-image: url("../../../assets/images/spotify-logo.png");
+  background-size: cover;
+}
+
+.status-wrapper {
+  color: white;
+  border-radius: 2rem;
+  padding: 1rem 2rem;
+  text-align: center;
+  text-transform: uppercase;
+  box-shadow: 2px 2px 16px rgb(119, 119, 119);
+  transition: 0.5s all;
+}
+
+.details-wrapper {
+  text-align: center;
+  padding-bottom: 1rem;
+}
+
+.pending {
+  background-color: rgb(255, 174, 0);
+}
+
+.success {
+  background-color: #00b81f;
+}
+
+.failure {
+  background-color: #db0000;
+}

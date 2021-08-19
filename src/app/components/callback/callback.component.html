@@ -1,0 +1,29 @@
+<div class="wrapper">
+  <mat-card>
+    <mat-card-header>
+      <div mat-card-avatar class="header-image"></div>
+      <mat-card-title>Spotifier</mat-card-title>
+      <mat-card-subtitle>Spotify API program</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div
+        matRipple
+        class="status-wrapper mat-display-1"
+        [ngClass]="{
+          pending: status == 'pending',
+          success: status == 'success',
+          failure: status == 'failure'
+        }"
+      >
+        {{ status }}
+      </div>
+      <div class="details-wrapper">
+        <p>{{ details }}</p>
+      </div>
+      <mat-progress-bar
+        *ngIf="status == 'pending'"
+        mode="indeterminate"
+      ></mat-progress-bar>
+    </mat-card-content>
+  </mat-card>
+</div>
