@@ -1,1 +1,37 @@
-<p>Hello World!</p>
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <button mat-icon-button (click)="drawer.toggle()">
+      <mat-icon *ngIf="drawer.opened; else elseBlock">close</mat-icon>
+      <ng-template #elseBlock>
+        <mat-icon>menu</mat-icon>
+      </ng-template>
+    </button>
+    <span class="spacer"></span>
+    <button
+      *ngIf="user"
+      [matMenuTriggerFor]="menu"
+      class="avatar"
+      mat-mini-fab
+      [style.backgroundImage]="'url(' + user.images?.[0]?.url ?? avatar + ')'"
+    ></button>
+    <mat-menu #menu="matMenu" class="menu">
+      <button mat-menu-item (click)="onClickTest()">
+        <mat-icon>dialpad</mat-icon>
+        <span>Redial</span>
+      </button>
+      <button mat-menu-item disabled>
+        <mat-icon>voicemail</mat-icon>
+        <span>Check voice mail</span>
+      </button>
+      <button mat-menu-item (click)="onClickLogout()">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-drawer-container autosize>
+  <mat-drawer #drawer mode="side">Drawer content</mat-drawer>
+  <mat-drawer-content>Main content</mat-drawer-content>
+</mat-drawer-container>
