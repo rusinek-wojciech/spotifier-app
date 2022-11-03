@@ -53,6 +53,6 @@ export class CallbackComponent implements OnInit {
       this.status = 'failure';
       this.details = details;
     }, 3000);
-    setTimeout(() => this.router.navigate(['']), 6000);
+    // setTimeout(() => this.router.navigate(['']), 6000);
   }
 }

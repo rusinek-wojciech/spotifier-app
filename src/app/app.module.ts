@@ -19,6 +19,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatMenuModule } from '@angular/material/menu';
 import { LogoutComponent } from './components/logout/logout.component';
+import { MatListModule } from '@angular/material/list';
+import { PlaylistsComponent } from './components/playlists/playlists.component';
 
 const materials = [
   MatCardModule,
@@ -31,6 +33,7 @@ const materials = [
   MatIconModule,
   MatSidenavModule,
   MatMenuModule,
+  MatListModule,
 ];
 
 @NgModule({
@@ -40,6 +43,7 @@ const materials = [
     HomeComponent,
     LoginComponent,
     LogoutComponent,
+    PlaylistsComponent,
   ],
   exports: [],
   imports: [

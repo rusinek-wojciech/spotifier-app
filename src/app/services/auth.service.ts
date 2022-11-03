@@ -2,7 +2,8 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { clientId, clientSecret, redirectUri, scopes } from '../api.config';
+import { environment } from 'src/environments/environment';
+import { scopes } from '../api.config';
 import { Token, TokenResponse } from '../models';
 
 @Injectable({
@@ -40,10 +41,10 @@ export class AuthService {
       'https://accounts.spotify.com/authorize' +
       '?response_type=code' +
       '&client_id=' +
-      clientId +
+      environment.clientId +
       (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
       '&redirect_uri=' +
-      encodeURIComponent(redirectUri);
+      encodeURIComponent(environment.redirectUri);
   }
 
   getToken(): Token {
@@ -57,11 +58,13 @@ export class AuthService {
         new HttpParams()
           .set('grant_type', 'authorization_code')
           .set('code', code)
-          .set('redirect_uri', redirectUri),
+          .set('redirect_uri', environment.redirectUri),
         {
           headers: new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',
-            Authorization: 'Basic ' + btoa(clientId + ':' + clientSecret),
+            Authorization:
+              'Basic ' +
+              btoa(environment.clientId + ':' + environment.clientSecret),
           }),
         }
       )

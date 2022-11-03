@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { ApiService } from 'src/app/services/api.service';
-import { CurrentUsersProfileResponse } from 'spotify-api';
-import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
+
+interface User {
+  images: { url: string }[];
+}
 
 @Component({
   selector: 'app-home',
@@ -12,7 +14,7 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
-  user!: CurrentUsersProfileResponse;
+  user!: User;
 
   readonly avatar = '../../../assets/images/avatar.png';
 
@@ -21,7 +23,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.apiService
       .getCurrentUserProfile$()
-      .subscribe((user: CurrentUsersProfileResponse) => (this.user = user));
+      .subscribe((user) => (this.user = user as User));
   }
 
   onClickLogout(): void {

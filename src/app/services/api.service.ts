@@ -7,73 +7,6 @@ import {
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
-import {
-  SingleAlbumResponse,
-  MultipleAlbumsResponse,
-  AlbumTracksResponse,
-  MultipleArtistsResponse,
-  SingleArtistResponse,
-  ArtistsTopTracksResponse,
-  ArtistsRelatedArtistsResponse,
-  ArtistsAlbumsResponse,
-  ListOfNewReleasesResponse,
-  ListOfFeaturedPlaylistsResponse,
-  MultipleCategoriesResponse,
-  SingleCategoryResponse,
-  CategoryPlaylistsReponse,
-  RecommendationsFromSeedsResponse,
-  AvailableGenreSeedsResponse,
-  UserProfileResponse,
-  CurrentUsersProfileResponse,
-  AlbumSearchResponse,
-  ArtistSearchResponse,
-  PlaylistSearchResponse,
-  TrackSearchResponse,
-  ShowSearchResponse,
-  EpisodeSearchResponse,
-  MultipleEpisodesResponse,
-  SingleEpisodeResponse,
-  FollowPlaylistReponse,
-  UnfollowPlaylistReponse,
-  UsersFollowPlaylistReponse,
-  UsersFollowedArtistsResponse,
-  FollowArtistsOrUsersResponse,
-  UnfollowArtistsOrUsersResponse,
-  UserFollowsUsersOrArtistsResponse,
-  AudioAnalysisResponse,
-  AudioFeaturesResponse,
-  MultipleAudioFeaturesResponse,
-  MultipleTracksResponse,
-  SingleTrackResponse,
-  ShowEpisodesResponse,
-  SingleShowResponse,
-  MultipleShowsResponse,
-  UploadCustomPlaylistCoverImageReponse,
-  UsersSavedAlbumsResponse,
-  SaveAlbumsForUserResponse,
-  RemoveAlbumsForUserResponse,
-  CheckUserSavedAlbumsResponse,
-  UsersSavedTracksResponse,
-  SaveTracksForUserResponse,
-  RemoveUsersSavedTracksResponse,
-  CheckUsersSavedTracksResponse,
-  UsersSavedEpisodesResponse,
-  UsersSavedShowsResponse,
-  VoidResponse,
-  AddToQueueResponse,
-  UsersTopTracksResponse,
-  UsersTopArtistsResponse,
-  ListOfUsersPlaylistsResponse,
-  ListOfCurrentUsersPlaylistsResponse,
-  CreatePlaylistResponse,
-  SinglePlaylistResponse,
-  ChangePlaylistDetailsReponse,
-  PlaylistTrackResponse,
-  AddTracksToPlaylistResponse,
-  ReorderPlaylistTracksResponse,
-  RemoveTracksFromPlaylistResponse,
-  ImageObject,
-} from 'spotify-api';
 
 type Params =
   | HttpParams
@@ -122,11 +55,8 @@ export class ApiService {
   /**
    * Get Multiple Albums
    */
-  getAlbums$(params: {
-    ids: string;
-    market?: string;
-  }): Observable<MultipleAlbumsResponse> {
-    return this.http.get<MultipleAlbumsResponse>(
+  getAlbums$(params: { ids: string; market?: string }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/albums`,
       this.options(params)
     );
@@ -135,11 +65,8 @@ export class ApiService {
   /**
    * Get an Album
    */
-  getAlbum$(
-    id: string,
-    params?: { market?: string }
-  ): Observable<SingleAlbumResponse> {
-    return this.http.get<SingleAlbumResponse>(
+  getAlbum$(id: string, params?: { market?: string }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/albums/${id}`,
       this.options(params)
     );
@@ -151,8 +78,8 @@ export class ApiService {
   getAlbumTracks$(
     id: string,
     params?: { market?: string; limit?: number; offset?: number }
-  ): Observable<AlbumTracksResponse> {
-    return this.http.get<AlbumTracksResponse>(
+  ): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/albums/${id}/tracks`,
       this.options(params)
     );
@@ -163,8 +90,8 @@ export class ApiService {
   /**
    * Get Multiple Artists
    */
-  getArtists$(params: { ids: string }): Observable<MultipleArtistsResponse> {
-    return this.http.get<MultipleArtistsResponse>(
+  getArtists$(params: { ids: string }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/artists`,
       this.options(params)
     );
@@ -173,8 +100,8 @@ export class ApiService {
   /**
    * Get an Artist
    */
-  getArtist$(id: string): Observable<SingleArtistResponse> {
-    return this.http.get<SingleArtistResponse>(
+  getArtist$(id: string): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/artists/${id}`,
       this.options()
     );
@@ -186,8 +113,8 @@ export class ApiService {
   getArtistTopTracks$(
     id: string,
     params: { market: string }
-  ): Observable<ArtistsTopTracksResponse> {
-    return this.http.get<ArtistsTopTracksResponse>(
+  ): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/artists/${id}/top-tracks`,
       this.options(params)
     );
@@ -196,10 +123,8 @@ export class ApiService {
   /**
    * Get an Artist's Related Artists
    */
-  getArtistRelatedArtists$(
-    id: string
-  ): Observable<ArtistsRelatedArtistsResponse> {
-    return this.http.get<ArtistsRelatedArtistsResponse>(
+  getArtistRelatedArtists$(id: string): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/artists/${id}/related-artists`,
       this.options()
     );
@@ -216,8 +141,8 @@ export class ApiService {
       limit?: number;
       offset?: number;
     }
-  ): Observable<ArtistsAlbumsResponse> {
-    return this.http.get<ArtistsAlbumsResponse>(
+  ): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/artists/${id}/albums`,
       this.options(params)
     );
@@ -232,8 +157,8 @@ export class ApiService {
     country?: string;
     limit?: number;
     offset?: number;
-  }): Observable<ListOfNewReleasesResponse> {
-    return this.http.get<ListOfNewReleasesResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/browse/new-releases`,
       this.options(params)
     );
@@ -248,8 +173,8 @@ export class ApiService {
     timestamp?: string;
     limit?: number;
     offset?: number;
-  }): Observable<ListOfFeaturedPlaylistsResponse> {
-    return this.http.get<ListOfFeaturedPlaylistsResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/browse/featured-playlists`,
       this.options(params)
     );
@@ -263,8 +188,8 @@ export class ApiService {
     locale?: string;
     limit?: number;
     offset?: number;
-  }): Observable<MultipleCategoriesResponse> {
-    return this.http.get<MultipleCategoriesResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/browse/categories`,
       this.options(params)
     );
@@ -279,8 +204,8 @@ export class ApiService {
       country?: string;
       locale?: string;
     }
-  ): Observable<SingleCategoryResponse> {
-    return this.http.get<SingleCategoryResponse>(
+  ): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/browse/categories/${id}`,
       this.options(params)
     );
@@ -296,8 +221,8 @@ export class ApiService {
       limit?: number;
       offset?: number;
     }
-  ): Observable<CategoryPlaylistsReponse> {
-    return this.http.get<CategoryPlaylistsReponse>(
+  ): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/browse/categories/${id}/playlists`,
       this.options(params)
     );
@@ -354,8 +279,8 @@ export class ApiService {
     target_tempo?: number;
     target_time_signature?: number;
     target_valence?: number;
-  }): Observable<RecommendationsFromSeedsResponse> {
-    return this.http.get<RecommendationsFromSeedsResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/recommendations`,
       this.options(params)
     );
@@ -364,8 +289,8 @@ export class ApiService {
   /**
    * Get Recommendation Genres
    */
-  getRecommendationGenres$(): Observable<AvailableGenreSeedsResponse> {
-    return this.http.get<AvailableGenreSeedsResponse>(
+  getRecommendationGenres$(): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/recommendations/available-genre-seeds`,
       this.options()
     );
@@ -376,11 +301,8 @@ export class ApiService {
   /**
    * Get Multiple Episodes
    */
-  getEpisodes$(params: {
-    ids: string;
-    market?: string;
-  }): Observable<MultipleEpisodesResponse> {
-    return this.http.get<MultipleEpisodesResponse>(
+  getEpisodes$(params: { ids: string; market?: string }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/episodes`,
       this.options(params)
     );
@@ -389,11 +311,8 @@ export class ApiService {
   /**
    * Get an Episode
    */
-  getEpisode$(
-    id: string,
-    params?: { market?: string }
-  ): Observable<SingleEpisodeResponse> {
-    return this.http.get<SingleEpisodeResponse>(
+  getEpisode$(id: string, params?: { market?: string }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/episodes/${id}`,
       this.options(params)
     );
@@ -409,8 +328,8 @@ export class ApiService {
     body?: {
       public?: boolean;
     }
-  ): Observable<FollowPlaylistReponse> {
-    return this.http.put<FollowPlaylistReponse>(
+  ): Observable<unknown> {
+    return this.http.put<unknown>(
       `${this.root}/v1/playlists/${id}/followers`,
       body,
       this.options()
@@ -420,8 +339,8 @@ export class ApiService {
   /**
    * Unfollow Playlist
    */
-  unfollowPlaylist$(id: string): Observable<UnfollowPlaylistReponse> {
-    return this.http.delete<UnfollowPlaylistReponse>(
+  unfollowPlaylist$(id: string): Observable<unknown> {
+    return this.http.delete<unknown>(
       `${this.root}/v1/playlists/${id}/followers`,
       this.options()
     );
@@ -435,8 +354,8 @@ export class ApiService {
     params: {
       ids: string;
     }
-  ): Observable<UsersFollowPlaylistReponse> {
-    return this.http.get<UsersFollowPlaylistReponse>(
+  ): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/playlists/${playlistId}/followers/contains`,
       this.options(params)
     );
@@ -448,8 +367,8 @@ export class ApiService {
   getUserFollowedArtists$(params?: {
     after?: string;
     limit?: number;
-  }): Observable<UsersFollowedArtistsResponse> {
-    return this.http.get<UsersFollowedArtistsResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/me/following`,
       this.options({
         ...params,
@@ -464,8 +383,8 @@ export class ApiService {
   followArtistsOrUsers$(params: {
     type: string;
     ids: string;
-  }): Observable<FollowArtistsOrUsersResponse> {
-    return this.http.put<FollowArtistsOrUsersResponse>(
+  }): Observable<unknown> {
+    return this.http.put<unknown>(
       `${this.root}/v1/me/following`,
       {},
       this.options(params)
@@ -478,8 +397,8 @@ export class ApiService {
   unfollowArtistsOrUsers$(params: {
     type: 'artist' | 'user';
     ids: string;
-  }): Observable<UnfollowArtistsOrUsersResponse> {
-    return this.http.delete<UnfollowArtistsOrUsersResponse>(
+  }): Observable<unknown> {
+    return this.http.delete<unknown>(
       `${this.root}/v1/me/following`,
       this.options(params)
     );
@@ -491,8 +410,8 @@ export class ApiService {
   getFollowingState$(params: {
     type: 'artist' | 'user';
     ids: string;
-  }): Observable<UserFollowsUsersOrArtistsResponse> {
-    return this.http.get<UserFollowsUsersOrArtistsResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/me/following/contains`,
       this.options(params)
     );
@@ -507,8 +426,8 @@ export class ApiService {
     limit?: number;
     offset?: number;
     market?: string;
-  }): Observable<UsersSavedAlbumsResponse> {
-    return this.http.get<UsersSavedAlbumsResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/me/albums`,
       this.options(params)
     );
@@ -517,10 +436,8 @@ export class ApiService {
   /**
    * Save Albums for Current User
    */
-  saveAlbumsForUser$(params: {
-    ids: string;
-  }): Observable<SaveAlbumsForUserResponse> {
-    return this.http.put<SaveAlbumsForUserResponse>(
+  saveAlbumsForUser$(params: { ids: string }): Observable<unknown> {
+    return this.http.put<unknown>(
       `${this.root}/v1/me/albums`,
       {},
       this.options(params)
@@ -530,10 +447,8 @@ export class ApiService {
   /**
    * Remove Albums for Current User
    */
-  removeAlbumsForUser$(params: {
-    ids: string;
-  }): Observable<RemoveAlbumsForUserResponse> {
-    return this.http.delete<RemoveAlbumsForUserResponse>(
+  removeAlbumsForUser$(params: { ids: string }): Observable<unknown> {
+    return this.http.delete<unknown>(
       `${this.root}/v1/me/albums`,
       this.options(params)
     );
@@ -542,10 +457,8 @@ export class ApiService {
   /**
    * Check User's Saved Albums
    */
-  checkUserSavedAlbums$(params: {
-    ids: string;
-  }): Observable<CheckUserSavedAlbumsResponse> {
-    return this.http.get<CheckUserSavedAlbumsResponse>(
+  checkUserSavedAlbums$(params: { ids: string }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/me/albums/contains`,
       this.options(params)
     );
@@ -558,8 +471,8 @@ export class ApiService {
     market?: string;
     limit?: number;
     offset?: number;
-  }): Observable<UsersSavedTracksResponse> {
-    return this.http.get<UsersSavedTracksResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/me/tracks`,
       this.options(params)
     );
@@ -568,10 +481,8 @@ export class ApiService {
   /**
    * Save Tracks for User
    */
-  saveTrackForUser$(params: {
-    ids: string;
-  }): Observable<SaveTracksForUserResponse> {
-    return this.http.put<SaveTracksForUserResponse>(
+  saveTrackForUser$(params: { ids: string }): Observable<unknown> {
+    return this.http.put<unknown>(
       `${this.root}/v1/me/tracks`,
       {},
       this.options(params)
@@ -581,10 +492,8 @@ export class ApiService {
   /**
    * Remove User's Saved Tracks
    */
-  removeUserSavedTracks$(params: {
-    ids: string;
-  }): Observable<RemoveUsersSavedTracksResponse> {
-    return this.http.delete<RemoveUsersSavedTracksResponse>(
+  removeUserSavedTracks$(params: { ids: string }): Observable<unknown> {
+    return this.http.delete<unknown>(
       `${this.root}/v1/me/tracks`,
       this.options(params)
     );
@@ -593,10 +502,8 @@ export class ApiService {
   /**
    * Check User's Saved Tracks
    */
-  checkUserSavedTracks$(params: {
-    ids: string;
-  }): Observable<CheckUsersSavedTracksResponse> {
-    return this.http.get<CheckUsersSavedTracksResponse>(
+  checkUserSavedTracks$(params: { ids: string }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/me/tracks/contains`,
       this.options(params)
     );
@@ -609,8 +516,8 @@ export class ApiService {
     market?: string;
     limit?: number;
     offset?: number;
-  }): Observable<UsersSavedEpisodesResponse> {
-    return this.http.get<UsersSavedEpisodesResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/me/episodes`,
       this.options(params)
     );
@@ -620,8 +527,8 @@ export class ApiService {
   /**
    * Save Episodes for User
    */
-  saveEpisodesForUser$(params: { ids: string }): Observable<VoidResponse> {
-    return this.http.put<VoidResponse>(
+  saveEpisodesForUser$(params: { ids: string }): Observable<unknown> {
+    return this.http.put<unknown>(
       `${this.root}/v1/me/episodes`,
       {},
       this.options(params)
@@ -632,8 +539,8 @@ export class ApiService {
   /**
    * Remove User's Saved Episodes
    */
-  removeUserSavedEpisodes$(params: { ids: string }): Observable<VoidResponse> {
-    return this.http.delete<VoidResponse>(
+  removeUserSavedEpisodes$(params: { ids: string }): Observable<unknown> {
+    return this.http.delete<unknown>(
       `${this.root}/v1/me/episodes`,
       this.options(params)
     );
@@ -656,8 +563,8 @@ export class ApiService {
   getUserSavedShows$(params?: {
     limit?: number;
     offset?: number;
-  }): Observable<UsersSavedShowsResponse> {
-    return this.http.get<UsersSavedShowsResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/me/shows`,
       this.options(params)
     );
@@ -667,8 +574,8 @@ export class ApiService {
   /**
    * Save Shows for Current User
    */
-  saveShowsForUser$(params: { ids: string }): Observable<VoidResponse> {
-    return this.http.put<VoidResponse>(
+  saveShowsForUser$(params: { ids: string }): Observable<unknown> {
+    return this.http.put<unknown>(
       `${this.root}/v1/me/shows`,
       {},
       this.options(params)
@@ -682,8 +589,8 @@ export class ApiService {
   removeUserSavedShows$(params: {
     ids: string;
     market?: string;
-  }): Observable<VoidResponse> {
-    return this.http.delete<VoidResponse>(
+  }): Observable<unknown> {
+    return this.http.delete<unknown>(
       `${this.root}/v1/me/shows`,
       this.options(params)
     );
@@ -722,8 +629,8 @@ export class ApiService {
     time_range?: string;
     limit?: string;
     offset?: string;
-  }): Observable<UsersTopArtistsResponse> {
-    return this.http.get<UsersTopArtistsResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/me/top/artists`,
       this.options(params)
     );
@@ -736,8 +643,8 @@ export class ApiService {
     time_range?: string;
     limit?: string;
     offset?: string;
-  }): Observable<UsersTopTracksResponse> {
-    return this.http.get<UsersTopTracksResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/me/top/tracks`,
       this.options(params)
     );
@@ -931,8 +838,8 @@ export class ApiService {
   addItemToQueue$(params: {
     uri: string;
     device_id?: string;
-  }): Observable<AddToQueueResponse> {
-    return this.http.post<AddToQueueResponse>(
+  }): Observable<unknown> {
+    return this.http.post<unknown>(
       `${this.root}/v1/me/player/queue`,
       {},
       this.options(params)
@@ -947,8 +854,8 @@ export class ApiService {
   getListOfCurrentUserPlaylists$(params?: {
     limit?: number;
     offset?: number;
-  }): Observable<ListOfCurrentUsersPlaylistsResponse> {
-    return this.http.get<ListOfCurrentUsersPlaylistsResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/me/playlists`,
       this.options(params)
     );
@@ -963,8 +870,8 @@ export class ApiService {
       limit?: number;
       offset?: number;
     }
-  ): Observable<ListOfUsersPlaylistsResponse> {
-    return this.http.get<ListOfUsersPlaylistsResponse>(
+  ): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/users/${id}/playlists`,
       this.options(params)
     );
@@ -981,8 +888,8 @@ export class ApiService {
       collaborative?: boolean;
       description?: string;
     }
-  ): Observable<CreatePlaylistResponse> {
-    return this.http.post<CreatePlaylistResponse>(
+  ): Observable<unknown> {
+    return this.http.post<unknown>(
       `${this.root}/v1/users/${id}/playlists`,
       {},
       this.options(params)
@@ -995,8 +902,8 @@ export class ApiService {
   getPlaylist$(
     id: string,
     params?: { market?: string; fields?: string; additional_types?: string }
-  ): Observable<SinglePlaylistResponse> {
-    return this.http.get<SinglePlaylistResponse>(
+  ): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/playlists/${id}`,
       this.options(params)
     );
@@ -1013,8 +920,8 @@ export class ApiService {
       collaborative?: boolean;
       description?: string;
     }
-  ): Observable<ChangePlaylistDetailsReponse> {
-    return this.http.put<ChangePlaylistDetailsReponse>(
+  ): Observable<unknown> {
+    return this.http.put<unknown>(
       `${this.root}/v1/playlists/${id}`,
       body,
       this.options()
@@ -1033,8 +940,8 @@ export class ApiService {
       offset?: number;
       additional_types?: string;
     }
-  ): Observable<PlaylistTrackResponse> {
-    return this.http.get<PlaylistTrackResponse>(
+  ): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/playlists/${id}/tracks`,
       this.options(params)
     );
@@ -1047,8 +954,8 @@ export class ApiService {
     id: string,
     body?: { uris?: string; position?: number },
     params?: { position?: number; uris?: string }
-  ): Observable<AddTracksToPlaylistResponse> {
-    return this.http.post<AddTracksToPlaylistResponse>(
+  ): Observable<unknown> {
+    return this.http.post<unknown>(
       `${this.root}/v1/playlists/${id}/tracks`,
       body,
       this.options(params)
@@ -1068,8 +975,8 @@ export class ApiService {
       snapshot_id?: string;
     },
     params?: { uris?: string }
-  ): Observable<ReorderPlaylistTracksResponse> {
-    return this.http.put<ReorderPlaylistTracksResponse>(
+  ): Observable<unknown> {
+    return this.http.put<unknown>(
       `${this.root}/v1/playlists/${id}/tracks`,
       body,
       this.options(params)
@@ -1086,22 +993,19 @@ export class ApiService {
       tracks: string[];
       snapshot_id?: string;
     }
-  ): Observable<RemoveTracksFromPlaylistResponse> {
+  ): Observable<unknown> {
     const options = this.options();
-    return this.http.delete<RemoveTracksFromPlaylistResponse>(
-      `${this.root}/v1/playlists/${id}/tracks`,
-      {
-        headers: options.headers,
-        body,
-      }
-    );
+    return this.http.delete<unknown>(`${this.root}/v1/playlists/${id}/tracks`, {
+      headers: options.headers,
+      body,
+    });
   }
 
   /**
    * Get a Playlist Cover Image
    */
-  getPlaylistCoverImage$(id: string): Observable<ImageObject[]> {
-    return this.http.get<ImageObject[]>(
+  getPlaylistCoverImage$(id: string): Observable<unknown[]> {
+    return this.http.get<unknown[]>(
       `${this.root}/v1/playlists/${id}/images`,
       this.options()
     );
@@ -1112,14 +1016,12 @@ export class ApiService {
    * Upload a Custom Playlist Cover Image
    * @
    */
-  uploadCustomPlaylistCoverImage$(
-    id: string
-  ): Observable<UploadCustomPlaylistCoverImageReponse> {
+  uploadCustomPlaylistCoverImage$(id: string): Observable<unknown> {
     const options = this.options();
     if (options.headers) {
       // options.headers.set('Content-Type', 'image/jpeg');
     }
-    return this.http.put<UploadCustomPlaylistCoverImageReponse>(
+    return this.http.put<unknown>(
       `${this.root}/v1/playlists/${id}/images`,
       {},
       {
@@ -1139,8 +1041,8 @@ export class ApiService {
     limit?: number;
     offset?: number;
     include_external: '' | 'audio';
-  }): Observable<AlbumSearchResponse> {
-    return this.http.get<AlbumSearchResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/search`,
       this.options({
         type: 'album',
@@ -1158,8 +1060,8 @@ export class ApiService {
     limit?: number;
     offset?: number;
     include_external: '' | 'audio';
-  }): Observable<ArtistSearchResponse> {
-    return this.http.get<ArtistSearchResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/search`,
       this.options({
         type: 'artist',
@@ -1177,8 +1079,8 @@ export class ApiService {
     limit?: number;
     offset?: number;
     include_external: '' | 'audio';
-  }): Observable<PlaylistSearchResponse> {
-    return this.http.get<PlaylistSearchResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/search`,
       this.options({
         type: 'playlist',
@@ -1196,8 +1098,8 @@ export class ApiService {
     limit?: number;
     offset?: number;
     include_external: '' | 'audio';
-  }): Observable<TrackSearchResponse> {
-    return this.http.get<TrackSearchResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/search`,
       this.options({
         type: 'track',
@@ -1215,8 +1117,8 @@ export class ApiService {
     limit?: number;
     offset?: number;
     include_external: '' | 'audio';
-  }): Observable<ShowSearchResponse> {
-    return this.http.get<ShowSearchResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/search`,
       this.options({
         type: 'show',
@@ -1234,8 +1136,8 @@ export class ApiService {
     limit?: number;
     offset?: number;
     include_external: '' | 'audio';
-  }): Observable<EpisodeSearchResponse> {
-    return this.http.get<EpisodeSearchResponse>(
+  }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/search`,
       this.options({
         type: 'episode',
@@ -1249,11 +1151,8 @@ export class ApiService {
   /**
    * Get Multiple Shows
    */
-  getShows$(params: {
-    ids: string;
-    market?: string;
-  }): Observable<MultipleShowsResponse> {
-    return this.http.get<MultipleShowsResponse>(
+  getShows$(params: { ids: string; market?: string }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/shows`,
       this.options(params)
     );
@@ -1267,8 +1166,8 @@ export class ApiService {
     params?: {
       market?: string;
     }
-  ): Observable<SingleShowResponse> {
-    return this.http.get<SingleShowResponse>(
+  ): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/shows/${id}`,
       this.options(params)
     );
@@ -1282,8 +1181,8 @@ export class ApiService {
     params?: {
       market?: string;
     }
-  ): Observable<ShowEpisodesResponse> {
-    return this.http.get<ShowEpisodesResponse>(
+  ): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/shows/${id}/episodes`,
       this.options(params)
     );
@@ -1294,11 +1193,8 @@ export class ApiService {
   /**
    * Get Several Tracks
    */
-  getTracks$(params: {
-    ids: string;
-    market?: string;
-  }): Observable<MultipleTracksResponse> {
-    return this.http.get<MultipleTracksResponse>(
+  getTracks$(params: { ids: string; market?: string }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/tracks`,
       this.options(params)
     );
@@ -1307,11 +1203,8 @@ export class ApiService {
   /**
    * Get a Track
    */
-  getTrack$(
-    id: string,
-    params?: { market?: string }
-  ): Observable<SingleTrackResponse> {
-    return this.http.get<SingleTrackResponse>(
+  getTrack$(id: string, params?: { market?: string }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/tracks/${id}`,
       this.options(params)
     );
@@ -1320,10 +1213,8 @@ export class ApiService {
   /**
    * Get Audio Features for Several Tracks
    */
-  getAudioFeaturesForTracks$(params: {
-    ids: string;
-  }): Observable<MultipleAudioFeaturesResponse> {
-    return this.http.get<MultipleAudioFeaturesResponse>(
+  getAudioFeaturesForTracks$(params: { ids: string }): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/audio-features`,
       this.options(params)
     );
@@ -1332,8 +1223,8 @@ export class ApiService {
   /**
    * Get Audio Features for a Track
    */
-  getAudioFeaturesForTrack$(id: string): Observable<AudioFeaturesResponse> {
-    return this.http.get<AudioFeaturesResponse>(
+  getAudioFeaturesForTrack$(id: string): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/audio-features/${id}`,
       this.options()
     );
@@ -1342,8 +1233,8 @@ export class ApiService {
   /**
    * Get Audio Analysis for a Track
    */
-  getAudioAnalysisForTrack$(id: string): Observable<AudioAnalysisResponse> {
-    return this.http.get<AudioAnalysisResponse>(
+  getAudioAnalysisForTrack$(id: string): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/audio-analysis/${id}`,
       this.options()
     );
@@ -1354,18 +1245,15 @@ export class ApiService {
   /**
    * Get Current User's Profile
    */
-  getCurrentUserProfile$(): Observable<CurrentUsersProfileResponse> {
-    return this.http.get<CurrentUsersProfileResponse>(
-      `${this.root}/v1/me`,
-      this.options()
-    );
+  getCurrentUserProfile$(): Observable<unknown> {
+    return this.http.get<unknown>(`${this.root}/v1/me`, this.options());
   }
 
   /**
    * Get a User's Profile
    */
-  getUserProfile$(id: string): Observable<UserProfileResponse> {
-    return this.http.get<UserProfileResponse>(
+  getUserProfile$(id: string): Observable<unknown> {
+    return this.http.get<unknown>(
       `${this.root}/v1/users/${id}`,
       this.options()
     );

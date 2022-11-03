@@ -1,5 +1,7 @@
+<!-- toolbar -->
 <mat-toolbar color="primary">
   <mat-toolbar-row>
+    <!-- menu -->
     <button mat-icon-button (click)="drawer.toggle()">
       <mat-icon *ngIf="drawer.opened; else elseBlock">close</mat-icon>
       <ng-template #elseBlock>
@@ -7,6 +9,7 @@
       </ng-template>
     </button>
     <span class="spacer"></span>
+    <!-- avatar -->
     <button
       *ngIf="user"
       [matMenuTriggerFor]="menu"
@@ -14,6 +17,7 @@
       mat-mini-fab
       [style.backgroundImage]="'url(' + user.images?.[0]?.url ?? avatar + ')'"
     ></button>
+    <!-- menu on avatar click -->
     <mat-menu #menu="matMenu" class="menu">
       <button mat-menu-item (click)="onClickTest()">
         <mat-icon>dialpad</mat-icon>
@@ -30,8 +34,16 @@
     </mat-menu>
   </mat-toolbar-row>
 </mat-toolbar>
-
+<!-- container -->
 <mat-drawer-container autosize>
-  <mat-drawer #drawer mode="side">Drawer content</mat-drawer>
-  <mat-drawer-content>Main content</mat-drawer-content>
+  <!-- side menu -->
+  <mat-drawer #drawer mode="side">
+    <mat-selection-list [multiple]="false">
+      <mat-list-option routerLink="playlists">Playlists</mat-list-option>
+    </mat-selection-list>
+  </mat-drawer>
+  <!-- content -->
+  <mat-drawer-content>
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
 </mat-drawer-container>

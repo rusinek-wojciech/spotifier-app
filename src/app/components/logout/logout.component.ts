@@ -11,6 +11,7 @@ export class LogoutComponent implements OnInit {
   ngOnInit(): void {
     if (this.auth.isAuthenticated()) {
       this.auth.logout();
+      this.auth.redirect();
       return;
     }
   }
