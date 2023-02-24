@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "npm run config && ng serve",
-    "build": "npm run config && ng build",
-    "watch": "npm run config && ng build --watch --configuration development",
+    "start": "npm run secrets && ng serve",
+    "build": "npm run secrets && ng build",
+    "watch": "npm run secrets && ng build --watch --configuration development",
     "test": "ng test",
-    "config": "node src/environments/set-env.js"
+    "secrets": "node script/secrets.js"
   },
   "private": true,
   "dependencies": {
@@ -30,6 +30,7 @@
     "@angular/cli": "~15.2.0",
     "@angular/compiler-cli": "^15.2.0",
     "@types/jasmine": "~4.3.0",
+    "@types/node": "^18.14.1",
     "colors": "^1.4.0",
     "dotenv": "^16.0.3",
     "jasmine-core": "~4.5.0",

@@ -1,12 +1,12 @@
-const setEnv = () => {
+function secrets() {
   const fs = require("fs");
-  const writeFile = fs.writeFile;
-  const targetPath = "./src/environments/environment.ts";
   const colors = require("colors");
-  const version = require("../../package.json").version;
+  const version = require("../package.json").version;
   require("dotenv").config({
-    path: "src/environments/.env",
+    path: ".env",
   });
+
+  const targetPath = "./src/environments/environment.ts";
   const envConfigFile = `export const environment = {
     version: '${version}',
     production: false,
@@ -16,18 +16,17 @@ const setEnv = () => {
   };
   `;
   console.log(colors.magenta("The file `environment.ts` will be written"));
-  writeFile(targetPath, envConfigFile, (err) => {
+  fs.writeFile(targetPath, envConfigFile, (err) => {
     if (err) {
       console.error(err);
       throw err;
-    } else {
-      console.log(
-        colors.magenta(
-          `Angular environment.ts file generated correctly at ${targetPath} \n`
-        )
-      );
     }
+    console.log(
+      colors.magenta(
+        `Angular environment.ts file generated correctly at ${targetPath} \n`
+      )
+    );
   });
-};
+}
 
-setEnv();
+secrets();

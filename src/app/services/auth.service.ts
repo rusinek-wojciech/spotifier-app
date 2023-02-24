@@ -52,22 +52,18 @@ export class AuthService {
   }
 
   getToken$(code: string): Observable<Token> {
+    const token64 = btoa(`${environment.clientId}:${environment.clientSecret}`);
+    const params = new HttpParams()
+      .set('grant_type', 'authorization_code')
+      .set('code', code)
+      .set('redirect_uri', environment.redirectUri);
     return this.http
-      .post<TokenResponse>(
-        'https://accounts.spotify.com/api/token',
-        new HttpParams()
-          .set('grant_type', 'authorization_code')
-          .set('code', code)
-          .set('redirect_uri', environment.redirectUri),
-        {
-          headers: new HttpHeaders({
-            'Content-Type': 'application/x-www-form-urlencoded',
-            Authorization:
-              'Basic ' +
-              btoa(environment.clientId + ':' + environment.clientSecret),
-          }),
-        }
-      )
+      .post<TokenResponse>('https://accounts.spotify.com/api/token', params, {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Basic ${token64}`,
+        }),
+      })
       .pipe(map((token: TokenResponse) => new Token(token)));
   }
 }
