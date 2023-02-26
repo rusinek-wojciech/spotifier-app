@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CallbackComponent } from './components/callback/callback.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
-import { LogoutComponent } from './components/logout/logout.component';
 import { PlaylistsComponent } from './components/playlists/playlists.component';
 import { AuthGuard } from './guards/auth.guard';
 
@@ -27,14 +25,6 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
-  },
-  {
-    path: 'logout',
-    component: LogoutComponent,
-  },
-  {
-    path: 'callback',
-    component: CallbackComponent,
   },
   {
     path: '**',

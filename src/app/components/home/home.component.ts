@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { ApiService } from 'src/app/services/api.service';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 interface User {
   images: { url: string }[];
@@ -18,7 +19,11 @@ export class HomeComponent implements OnInit {
 
   readonly avatar = '../../../assets/images/avatar.png';
 
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(
+    private apiService: ApiService,
+    private router: Router,
+    private auth: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.apiService
@@ -27,7 +32,7 @@ export class HomeComponent implements OnInit {
   }
 
   onClickLogout(): void {
-    this.router.navigate(['logout']);
+    this.auth.logout();
   }
 
   onClickTest(): void {

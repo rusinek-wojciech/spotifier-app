@@ -10,9 +10,9 @@
         matRipple
         class="status-wrapper mat-display-1"
         [ngClass]="{
-          pending: status == 'pending',
-          success: status == 'success',
-          failure: status == 'failure'
+          pending: status === Status.PENDING,
+          success: status === Status.SUCCESS,
+          failure: status === Status.FAILURE
         }"
       >
         {{ status }}
@@ -20,8 +20,11 @@
       <div class="details-wrapper">
         <p>{{ details }}</p>
       </div>
+      <button (click)="redirect()" *ngIf="status === Status.FAILURE" mat-button>
+        Try again
+      </button>
       <mat-progress-bar
-        *ngIf="status == 'pending'"
+        *ngIf="status === Status.PENDING"
         mode="indeterminate"
       ></mat-progress-bar>
     </mat-card-content>

@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, shareReplay, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { scopes } from '../api.config';
 import { Token, TokenResponse } from '../models';
@@ -10,60 +10,90 @@ import { Token, TokenResponse } from '../models';
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly key = 'token';
+  private static readonly TOKEN_KEY = 'token';
+  private static readonly AUTH_LINK = `https://accounts.spotify.com/authorize?${new URLSearchParams(
+    [
+      ['response_type', 'code'],
+      ['client_id', environment.clientId],
+      ['scope', scopes],
+      ['redirect_uri', environment.redirectUri],
+    ]
+  ).toString()}`;
+  private static readonly AUTH_BASIC = btoa(
+    `${environment.clientId}:${environment.clientSecret}`
+  );
 
-  constructor(private http: HttpClient) {}
+  private _token: Token | null = null;
 
-  login(token: Token): void {
-    localStorage.setItem(this.key, JSON.stringify(token));
-  }
-
-  logout(): void {
-    localStorage.removeItem(this.key);
+  constructor(private http: HttpClient) {
+    this._token = this.getToken();
+    this.isAuthenticated();
   }
 
   isAuthenticated(): boolean {
-    /* cannot get token */
-    const tokenString = localStorage.getItem(this.key);
-    if (!tokenString) {
+    if (!this._token) {
+      this.logout();
       return false;
     }
-    /* token timeout */
-    const token: Token = JSON.parse(tokenString);
-    if (Date.now() >= token.validTo) {
+    if (Date.now() >= this._token.validTo) {
+      this.logout();
       return false;
     }
     return true;
   }
 
+  logout() {
+    // notify subscribers of token
+    this.removeToken();
+  }
+
+  login(token: Token) {
+    // notify subscribers of token
+    this.setToken(token);
+  }
+
   redirect(): void {
-    window.location.href =
-      'https://accounts.spotify.com/authorize' +
-      '?response_type=code' +
-      '&client_id=' +
-      environment.clientId +
-      (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
-      '&redirect_uri=' +
-      encodeURIComponent(environment.redirectUri);
+    window.location.href = AuthService.AUTH_LINK;
   }
 
-  getToken(): Token {
-    return JSON.parse(localStorage.getItem(this.key) || '');
+  get token() {
+    return this._token!;
   }
 
-  getToken$(code: string): Observable<Token> {
-    const token64 = btoa(`${environment.clientId}:${environment.clientSecret}`);
-    const params = new HttpParams()
-      .set('grant_type', 'authorization_code')
-      .set('code', code)
-      .set('redirect_uri', environment.redirectUri);
+  fetchToken$(code: string): Observable<Token> {
     return this.http
-      .post<TokenResponse>('https://accounts.spotify.com/api/token', params, {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Basic ${token64}`,
-        }),
-      })
-      .pipe(map((token: TokenResponse) => new Token(token)));
+      .post<TokenResponse>(
+        'https://accounts.spotify.com/api/token',
+        new HttpParams()
+          .set('grant_type', 'authorization_code')
+          .set('code', code)
+          .set('redirect_uri', environment.redirectUri),
+        {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Authorization: `Basic ${AuthService.AUTH_BASIC}`,
+          }),
+        }
+      )
+      .pipe(
+        map((res) => new Token(res)),
+        tap((token) => this.login(token)),
+        shareReplay()
+      );
+  }
+
+  private removeToken() {
+    this._token = null;
+    localStorage.removeItem(AuthService.TOKEN_KEY);
+  }
+
+  private setToken(token: Token) {
+    this._token = token;
+    localStorage.setItem(AuthService.TOKEN_KEY, JSON.stringify(token));
+  }
+
+  private getToken() {
+    const token = localStorage.getItem(AuthService.TOKEN_KEY);
+    return token ? (JSON.parse(token) as Token) : null;
   }
 }

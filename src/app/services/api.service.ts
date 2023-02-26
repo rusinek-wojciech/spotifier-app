@@ -1,12 +1,7 @@
-import {
-  HttpClient,
-  HttpContext,
-  HttpHeaders,
-  HttpParams,
-} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { SpotifyApi } from '../models/spotify-api';
 
 type Params =
   | HttpParams
@@ -18,121 +13,86 @@ type Params =
         | ReadonlyArray<string | number | boolean>;
     };
 
-interface Options {
-  headers?:
-    | HttpHeaders
-    | {
-        [header: string]: string | string[];
-      };
-  context?: HttpContext;
-  observe?: 'body';
-  params?: Params;
-  reportProgress?: boolean;
-  responseType?: 'json';
-  withCredentials?: boolean;
-}
-
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  private readonly root = 'https://api.spotify.com';
+  private static readonly ROOT = 'https://api.spotify.com';
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, private auth: AuthService) {}
 
-  private options(params?: Params): Options {
+  private options(params?: Params) {
     return {
       headers: new HttpHeaders({
-        Authorization: 'Bearer ' + this.authService.getToken().accessToken,
+        Authorization: `Bearer ${this.auth.token.accessToken}`,
         'Content-Type': 'application/json',
       }),
       params,
     };
   }
 
+  private get$<T = unknown>(uri: string, params?: Params) {
+    return this.http.get<T>(`${ApiService.ROOT}/${uri}`, this.options(params));
+  }
+
+  private put$<T = unknown>(uri: string, body: unknown, params?: Params) {
+    return this.http.put<T>(
+      `${ApiService.ROOT}/${uri}`,
+      body,
+      this.options(params)
+    );
+  }
+
+  private post$<T = unknown>(uri: string, body: unknown, params?: Params) {
+    return this.http.post<T>(
+      `${ApiService.ROOT}/${uri}`,
+      body,
+      this.options(params)
+    );
+  }
+
+  private delete$<T = unknown>(uri: string, params?: Params) {
+    return this.http.delete<T>(
+      `${ApiService.ROOT}/${uri}`,
+      this.options(params)
+    );
+  }
+
   ////////////////// Albums API ////////////////////////////////
 
-  /**
-   * Get Multiple Albums
-   */
-  getAlbums$(params: { ids: string; market?: string }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/albums`,
-      this.options(params)
-    );
+  getAlbums$(params: { ids: string; market?: string }) {
+    return this.get$(`v1/albums`, params);
   }
 
-  /**
-   * Get an Album
-   */
-  getAlbum$(id: string, params?: { market?: string }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/albums/${id}`,
-      this.options(params)
-    );
+  getAlbum$(id: string, params?: { market?: string }) {
+    return this.get$(`v1/albums/${id}`, params);
   }
 
-  /**
-   * Get an Album's Tracks
-   */
   getAlbumTracks$(
     id: string,
     params?: { market?: string; limit?: number; offset?: number }
-  ): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/albums/${id}/tracks`,
-      this.options(params)
-    );
+  ) {
+    return this.get$(`v1/albums/${id}/tracks`, params);
   }
 
   ////////////////// Artists API ////////////////////////////////
 
-  /**
-   * Get Multiple Artists
-   */
-  getArtists$(params: { ids: string }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/artists`,
-      this.options(params)
-    );
+  getArtists$(params: { ids: string }) {
+    return this.get$(`v1/artists`, params);
   }
 
-  /**
-   * Get an Artist
-   */
-  getArtist$(id: string): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/artists/${id}`,
-      this.options()
-    );
+  getArtist$(id: string) {
+    return this.get$(`v1/artists/${id}`);
   }
 
-  /**
-   * Get an Artist's Top Tracks
-   */
-  getArtistTopTracks$(
-    id: string,
-    params: { market: string }
-  ): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/artists/${id}/top-tracks`,
-      this.options(params)
-    );
+  getArtistTopTracks$(id: string, params: { market: string }) {
+    return this.get$(`v1/artists/${id}/top-tracks`, params);
   }
 
-  /**
-   * Get an Artist's Related Artists
-   */
-  getArtistRelatedArtists$(id: string): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/artists/${id}/related-artists`,
-      this.options()
-    );
+  getArtistRelatedArtists$(id: string) {
+    return this.get$(`v1/artists/${id}/related-artists`);
   }
 
-  /**
-   * Get an Artist's Albums
-   */
   getArtistAlbums$(
     id: string,
     params?: {
@@ -141,79 +101,49 @@ export class ApiService {
       limit?: number;
       offset?: number;
     }
-  ): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/artists/${id}/albums`,
-      this.options(params)
-    );
+  ) {
+    return this.get$(`v1/artists/${id}/albums`, params);
   }
 
   ////////////////// Browse API ////////////////////////////////
 
-  /**
-   * Get All New Releases
-   */
   getNewReleases$(params?: {
     country?: string;
     limit?: number;
     offset?: number;
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/browse/new-releases`,
-      this.options(params)
-    );
+  }) {
+    return this.get$(`v1/browse/new-releases`, params);
   }
 
-  /**
-   * Get All Featured Playlists
-   */
   getFeaturedPlaylists$(params?: {
     country?: string;
     locale?: string;
     timestamp?: string;
     limit?: number;
     offset?: number;
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/browse/featured-playlists`,
-      this.options(params)
-    );
+  }) {
+    return this.get$(`v1/browse/featured-playlists`, params);
   }
 
-  /**
-   * Get All Categories
-   */
   getCategories$(params?: {
     country?: string;
     locale?: string;
     limit?: number;
     offset?: number;
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/browse/categories`,
-      this.options(params)
-    );
+  }) {
+    return this.get$(`v1/browse/categories`, params);
   }
 
-  /**
-   * Get a Category
-   */
   getCategory$(
     id: string,
     params?: {
       country?: string;
       locale?: string;
     }
-  ): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/browse/categories/${id}`,
-      this.options(params)
-    );
+  ) {
+    return this.get$(`v1/browse/categories/${id}`, params);
   }
 
-  /**
-   * Get a Category's Playlists
-   */
   getCategoryPlaylists$(
     id: string,
     params?: {
@@ -221,16 +151,10 @@ export class ApiService {
       limit?: number;
       offset?: number;
     }
-  ): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/browse/categories/${id}/playlists`,
-      this.options(params)
-    );
+  ) {
+    return this.get$(`v1/browse/categories/${id}/playlists`, params);
   }
 
-  /**
-   * Get Recommendations
-   */
   getRecommendations$(params: {
     limit?: number;
     market?: string;
@@ -279,432 +203,193 @@ export class ApiService {
     target_tempo?: number;
     target_time_signature?: number;
     target_valence?: number;
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/recommendations`,
-      this.options(params)
-    );
+  }) {
+    return this.get$(`v1/recommendations`, params);
   }
 
-  /**
-   * Get Recommendation Genres
-   */
-  getRecommendationGenres$(): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/recommendations/available-genre-seeds`,
-      this.options()
-    );
+  getRecommendationGenres$() {
+    return this.get$(`v1/recommendations/available-genre-seeds`);
   }
 
   ////////////////// Episodes API ////////////////////////////////
 
-  /**
-   * Get Multiple Episodes
-   */
-  getEpisodes$(params: { ids: string; market?: string }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/episodes`,
-      this.options(params)
-    );
+  getEpisodes$(params: { ids: string; market?: string }) {
+    return this.get$(`v1/episodes`, params);
   }
 
-  /**
-   * Get an Episode
-   */
-  getEpisode$(id: string, params?: { market?: string }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/episodes/${id}`,
-      this.options(params)
-    );
+  getEpisode$(id: string, params?: { market?: string }) {
+    return this.get$(`v1/episodes/${id}`, params);
   }
 
   ////////////////// Follow API ////////////////////////////////
 
-  /**
-   * Follow a Playlist
-   */
   followPlaylist$(
     id: string,
     body?: {
       public?: boolean;
     }
-  ): Observable<unknown> {
-    return this.http.put<unknown>(
-      `${this.root}/v1/playlists/${id}/followers`,
-      body,
-      this.options()
-    );
+  ) {
+    return this.put$(`v1/playlists/${id}/followers`, body);
   }
 
-  /**
-   * Unfollow Playlist
-   */
-  unfollowPlaylist$(id: string): Observable<unknown> {
-    return this.http.delete<unknown>(
-      `${this.root}/v1/playlists/${id}/followers`,
-      this.options()
-    );
+  unfollowPlaylist$(id: string) {
+    return this.delete$(`v1/playlists/${id}/followers`);
   }
 
-  /**
-   * Check if Users Follow a Playlist
-   */
   checkIfUsersFollowPlaylist$(
     playlistId: string,
     params: {
       ids: string;
     }
-  ): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/playlists/${playlistId}/followers/contains`,
-      this.options(params)
-    );
+  ) {
+    return this.get$(`v1/playlists/${playlistId}/followers/contains`, params);
   }
 
-  /**
-   * Get User's Followed Artists
-   */
-  getUserFollowedArtists$(params?: {
-    after?: string;
-    limit?: number;
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/me/following`,
-      this.options({
-        ...params,
-        type: 'artist',
-      })
-    );
+  getUserFollowedArtists$(params?: { after?: string; limit?: number }) {
+    return this.get$(`v1/me/following`, {
+      ...params,
+      type: 'artist',
+    });
   }
 
-  /**
-   * Follow Artists or Users
-   */
-  followArtistsOrUsers$(params: {
-    type: string;
-    ids: string;
-  }): Observable<unknown> {
-    return this.http.put<unknown>(
-      `${this.root}/v1/me/following`,
-      {},
-      this.options(params)
-    );
+  followArtistsOrUsers$(params: { type: string; ids: string }) {
+    return this.put$(`v1/me/following`, {}, params);
   }
 
-  /**
-   * Unfollow Artists or Users
-   */
-  unfollowArtistsOrUsers$(params: {
-    type: 'artist' | 'user';
-    ids: string;
-  }): Observable<unknown> {
-    return this.http.delete<unknown>(
-      `${this.root}/v1/me/following`,
-      this.options(params)
-    );
+  unfollowArtistsOrUsers$(params: { type: 'artist' | 'user'; ids: string }) {
+    return this.delete$(`v1/me/following`, params);
   }
 
-  /**
-   * Get Following State for Artists/Users
-   */
-  getFollowingState$(params: {
-    type: 'artist' | 'user';
-    ids: string;
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/me/following/contains`,
-      this.options(params)
-    );
+  getFollowingState$(params: { type: 'artist' | 'user'; ids: string }) {
+    return this.get$(`v1/me/following/contains`, params);
   }
 
   ////////////////// Library API ////////////////////////////////
 
-  /**
-   * Get User's Saved Albums
-   */
   getUserSavedAlbums$(params?: {
     limit?: number;
     offset?: number;
     market?: string;
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/me/albums`,
-      this.options(params)
-    );
+  }) {
+    return this.get$(`v1/me/albums`, params);
   }
 
-  /**
-   * Save Albums for Current User
-   */
-  saveAlbumsForUser$(params: { ids: string }): Observable<unknown> {
-    return this.http.put<unknown>(
-      `${this.root}/v1/me/albums`,
-      {},
-      this.options(params)
-    );
+  saveAlbumsForUser$(params: { ids: string }) {
+    return this.put$(`v1/me/albums`, {}, params);
   }
 
-  /**
-   * Remove Albums for Current User
-   */
-  removeAlbumsForUser$(params: { ids: string }): Observable<unknown> {
-    return this.http.delete<unknown>(
-      `${this.root}/v1/me/albums`,
-      this.options(params)
-    );
+  removeAlbumsForUser$(params: { ids: string }) {
+    return this.delete$(`v1/me/albums`, params);
   }
 
-  /**
-   * Check User's Saved Albums
-   */
-  checkUserSavedAlbums$(params: { ids: string }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/me/albums/contains`,
-      this.options(params)
-    );
+  checkUserSavedAlbums$(params: { ids: string }) {
+    return this.get$(`v1/me/albums/contains`, params);
   }
 
-  /**
-   * Get User's Saved Tracks
-   */
   getUserSavedTracks$(params?: {
     market?: string;
     limit?: number;
     offset?: number;
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/me/tracks`,
-      this.options(params)
-    );
+  }) {
+    return this.get$(`v1/me/tracks`, params);
   }
 
-  /**
-   * Save Tracks for User
-   */
-  saveTrackForUser$(params: { ids: string }): Observable<unknown> {
-    return this.http.put<unknown>(
-      `${this.root}/v1/me/tracks`,
-      {},
-      this.options(params)
-    );
+  saveTrackForUser$(params: { ids: string }) {
+    return this.put$(`v1/me/tracks`, {}, params);
   }
 
-  /**
-   * Remove User's Saved Tracks
-   */
-  removeUserSavedTracks$(params: { ids: string }): Observable<unknown> {
-    return this.http.delete<unknown>(
-      `${this.root}/v1/me/tracks`,
-      this.options(params)
-    );
+  removeUserSavedTracks$(params: { ids: string }) {
+    return this.delete$(`v1/me/tracks`, params);
   }
 
-  /**
-   * Check User's Saved Tracks
-   */
-  checkUserSavedTracks$(params: { ids: string }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/me/tracks/contains`,
-      this.options(params)
-    );
+  checkUserSavedTracks$(params: { ids: string }) {
+    return this.get$(`v1/me/tracks/contains`, params);
   }
 
-  /**
-   * Get User's Saved Episodes
-   */
   getUserSavedEpisodes$(params?: {
     market?: string;
     limit?: number;
     offset?: number;
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/me/episodes`,
-      this.options(params)
-    );
+  }) {
+    return this.get$(`v1/me/episodes`, params);
   }
 
-  // TODO: fix void
-  /**
-   * Save Episodes for User
-   */
-  saveEpisodesForUser$(params: { ids: string }): Observable<unknown> {
-    return this.http.put<unknown>(
-      `${this.root}/v1/me/episodes`,
-      {},
-      this.options(params)
-    );
+  saveEpisodesForUser$(params: { ids: string }) {
+    return this.put$(`v1/me/episodes`, {}, params);
   }
 
-  // TODO: fix void
-  /**
-   * Remove User's Saved Episodes
-   */
-  removeUserSavedEpisodes$(params: { ids: string }): Observable<unknown> {
-    return this.http.delete<unknown>(
-      `${this.root}/v1/me/episodes`,
-      this.options(params)
-    );
+  removeUserSavedEpisodes$(params: { ids: string }) {
+    return this.delete$(`v1/me/episodes`, params);
   }
 
-  // TODO: fix
-  /**
-   * Check User's Saved Episodes
-   */
-  checkUserSavedEpisodes$(params: { ids: string }): Observable<Array<boolean>> {
-    return this.http.get<Array<boolean>>(
-      `${this.root}/v1/me/episodes/contains`,
-      this.options(params)
-    );
+  checkUserSavedEpisodes$(params: { ids: string }) {
+    return this.get$(`v1/me/episodes/contains`, params);
   }
 
-  /**
-   * Get User's Saved Shows
-   */
-  getUserSavedShows$(params?: {
-    limit?: number;
-    offset?: number;
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/me/shows`,
-      this.options(params)
-    );
+  getUserSavedShows$(params?: { limit?: number; offset?: number }) {
+    return this.get$(`v1/me/shows`, params);
   }
 
-  // TODO: fix
-  /**
-   * Save Shows for Current User
-   */
-  saveShowsForUser$(params: { ids: string }): Observable<unknown> {
-    return this.http.put<unknown>(
-      `${this.root}/v1/me/shows`,
-      {},
-      this.options(params)
-    );
+  saveShowsForUser$(params: { ids: string }) {
+    return this.put$(`v1/me/shows`, {}, params);
   }
 
-  // TODO: fix
-  /**
-   * Remove User's Saved Shows
-   */
-  removeUserSavedShows$(params: {
-    ids: string;
-    market?: string;
-  }): Observable<unknown> {
-    return this.http.delete<unknown>(
-      `${this.root}/v1/me/shows`,
-      this.options(params)
-    );
+  removeUserSavedShows$(params: { ids: string; market?: string }) {
+    return this.delete$(`v1/me/shows`, params);
   }
 
-  // TODO: fix
-  /**
-   * Check User's Saved Shows
-   */
-  checkUserSavedShows$(params: { ids: string }): Observable<Array<boolean>> {
-    return this.http.get<Array<boolean>>(
-      `${this.root}/v1/me/shows/contains`,
-      this.options(params)
-    );
+  checkUserSavedShows$(params: { ids: string }) {
+    return this.get$(`v1/me/shows/contains`, params);
   }
 
   ////////////////// Markets API ////////////////////////////////
 
-  // TODO: add type
-  /**
-   * Get Available Markets
-   */
-  getAvailableMarkets$(): Observable<{ markets: string[] }> {
-    return this.http.get<{ markets: string[] }>(
-      `${this.root}/v1/markets`,
-      this.options()
-    );
+  getAvailableMarkets$() {
+    return this.get$(`v1/markets`);
   }
 
   ////////////////// Personalization API ////////////////////////////////
 
-  /**
-   * Get a User's Top Artists and Tracks
-   */
   getUserTopArtists$(params?: {
     time_range?: string;
     limit?: string;
     offset?: string;
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/me/top/artists`,
-      this.options(params)
-    );
+  }) {
+    return this.get$(`v1/me/top/artists`, params);
   }
 
-  /**
-   * Get a User's Top Artists and Tracks
-   */
   getUserTopTracks$(params?: {
     time_range?: string;
     limit?: string;
     offset?: string;
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/me/top/tracks`,
-      this.options(params)
-    );
+  }) {
+    return this.get$(`v1/me/top/tracks`, params);
   }
 
   ////////////////// Player API ////////////////////////////////
 
-  /**
-   * Get Information About The User's Current Playback
-   */
   getInformationAboutUserCurrentPlayback$(params?: {
     market?: string;
     additional_types?: string;
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/me/player`,
-      this.options(params)
-    );
+  }) {
+    return this.get$(`v1/me/player`, params);
   }
 
-  /**
-   * Transfer a User's Playback
-   */
-  transferUserPlayback$(body: {
-    device_ids: string;
-    play?: boolean;
-  }): Observable<unknown> {
-    return this.http.put<unknown>(
-      `${this.root}/v1/me/player`,
-      body,
-      this.options()
-    );
+  transferUserPlayback$(body: { device_ids: string; play?: boolean }) {
+    return this.put$(`v1/me/player`, body);
   }
 
-  /**
-   * Get a User's Available Devices
-   */
-  getUserAvailableDevices$(): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/me/player/devices`,
-      this.options()
-    );
+  getUserAvailableDevices$() {
+    return this.get$(`v1/me/player/devices`);
   }
 
-  /**
-   * Get the User's Currently Playing Track
-   */
   getUserCurrentlyPlayingTrack$(params: {
     market: string;
     additional_types?: string;
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/me/player/currently-playing`,
-      this.options(params)
-    );
+  }) {
+    return this.get$(`v1/me/player/currently-playing`, params);
   }
 
-  /**
-   * Start/Resume a User's Playback
-   */
   startOrResumeUserPlayback$(
     params?: {
       device_id?: string;
@@ -717,169 +402,75 @@ export class ApiService {
       };
       position_ms: number;
     }
-  ): Observable<unknown> {
-    return this.http.put<unknown>(
-      `${this.root}/v1/me/player/play`,
-      body,
-      this.options(params)
-    );
+  ) {
+    return this.put$(`v1/me/player/play`, body, params);
   }
 
-  /**
-   * Pause a User's Playback
-   */
-  pauseUserPlayback$(params?: { device_id?: string }): Observable<unknown> {
-    return this.http.put<unknown>(
-      `${this.root}/v1/me/player/pause`,
-      {},
-      this.options(params)
-    );
+  pauseUserPlayback$(params?: { device_id?: string }) {
+    return this.put$(`v1/me/player/pause`, {}, params);
   }
 
-  /**
-   * Skip User’s Playback To Next Track
-   */
-  skipUserPlaybackToNextTrack$(params?: {
-    device_id?: string;
-  }): Observable<unknown> {
-    return this.http.post<unknown>(
-      `${this.root}/v1/me/player/next`,
-      {},
-      this.options(params)
-    );
+  skipUserPlaybackToNextTrack$(params?: { device_id?: string }) {
+    return this.post$(`v1/me/player/next`, {}, params);
   }
 
-  /**
-   * Skip User’s Playback To Previous Track
-   */
-  skipUserPlaybackToPreviousTrack$(params?: {
-    device_id?: string;
-  }): Observable<unknown> {
-    return this.http.post<unknown>(
-      `${this.root}/v1/me/player/previous`,
-      {},
-      this.options(params)
-    );
+  skipUserPlaybackToPreviousTrack$(params?: { device_id?: string }) {
+    return this.post$(`v1/me/player/previous`, {}, params);
   }
 
-  /**
-   * Seek To Position In Currently Playing Track
-   */
   seekToPositionInCurrentlyPlayingTrack$(params: {
     position_ms: number;
     device_id?: string;
-  }): Observable<unknown> {
-    return this.http.put<unknown>(
-      `${this.root}/v1/me/player/seek`,
-      {},
-      this.options(params)
-    );
+  }) {
+    return this.put$(`v1/me/player/seek`, {}, params);
   }
 
-  /**
-   * Set Repeat Mode On User’s Playback
-   */
-  setRepeatModeOnUserPlayback$(params: {
-    state: string;
-    device_id?: string;
-  }): Observable<unknown> {
-    return this.http.put<unknown>(
-      `${this.root}/v1/me/player/repeat`,
-      {},
-      this.options(params)
-    );
+  setRepeatModeOnUserPlayback$(params: { state: string; device_id?: string }) {
+    return this.put$(`v1/me/player/repeat`, {}, params);
   }
 
-  /**
-   * Set Volume For User's Playback
-   */
   setVolumeForUserPlayback$(params: {
     volume_percent: number;
     device_id?: string;
-  }): Observable<unknown> {
-    return this.http.put<unknown>(
-      `${this.root}/v1/me/player/volume`,
-      {},
-      this.options(params)
-    );
+  }) {
+    return this.put$(`v1/me/player/volume`, {}, params);
   }
 
-  /**
-   * Toggle Shuffle For User’s Playback
-   */
   toggleShuffleForUserPlayback$(params: {
     state: boolean;
     device_id?: string;
-  }): Observable<unknown> {
-    return this.http.put<unknown>(
-      `${this.root}/v1/me/player/shuffle`,
-      {},
-      this.options(params)
-    );
+  }) {
+    return this.put$(`v1/me/player/shuffle`, {}, params);
   }
 
-  /**
-   * Get Current User's Recently Played Tracks
-   */
   getUserRecentlyPlayedTracks$(params?: {
     limit?: number;
     after?: number;
     before?: number;
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/me/player/recently-played`,
-      this.options(params)
-    );
+  }) {
+    return this.get$(`v1/me/player/recently-played`, params);
   }
 
-  /**
-   * Add an item to queue
-   */
-  addItemToQueue$(params: {
-    uri: string;
-    device_id?: string;
-  }): Observable<unknown> {
-    return this.http.post<unknown>(
-      `${this.root}/v1/me/player/queue`,
-      {},
-      this.options(params)
-    );
+  addItemToQueue$(params: { uri: string; device_id?: string }) {
+    return this.post$(`v1/me/player/queue`, {}, params);
   }
 
   ////////////////// Playlists API ////////////////////////////////
 
-  /**
-   * Get a List of Current User's Playlists
-   */
-  getListOfCurrentUserPlaylists$(params?: {
-    limit?: number;
-    offset?: number;
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/me/playlists`,
-      this.options(params)
-    );
+  getListOfCurrentUserPlaylists$(params?: { limit?: number; offset?: number }) {
+    return this.get$(`v1/me/playlists`, params);
   }
 
-  /**
-   * Get a List of a User's Playlists
-   */
   getListOfUserPlaylists$(
     id: string,
     params?: {
       limit?: number;
       offset?: number;
     }
-  ): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/users/${id}/playlists`,
-      this.options(params)
-    );
+  ) {
+    return this.get$(`v1/users/${id}/playlists`, params);
   }
 
-  /**
-   * Create a Playlist
-   */
   createPlaylist$(
     id: string,
     params: {
@@ -888,12 +479,8 @@ export class ApiService {
       collaborative?: boolean;
       description?: string;
     }
-  ): Observable<unknown> {
-    return this.http.post<unknown>(
-      `${this.root}/v1/users/${id}/playlists`,
-      {},
-      this.options(params)
-    );
+  ) {
+    return this.post$(`v1/users/${id}/playlists`, {}, params);
   }
 
   /**
@@ -902,16 +489,10 @@ export class ApiService {
   getPlaylist$(
     id: string,
     params?: { market?: string; fields?: string; additional_types?: string }
-  ): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/playlists/${id}`,
-      this.options(params)
-    );
+  ) {
+    return this.get$(`v1/playlists/${id}`, params);
   }
 
-  /**
-   * Change a Playlist's Details
-   */
   changePlaylistDetails$(
     id: string,
     body?: {
@@ -920,17 +501,10 @@ export class ApiService {
       collaborative?: boolean;
       description?: string;
     }
-  ): Observable<unknown> {
-    return this.http.put<unknown>(
-      `${this.root}/v1/playlists/${id}`,
-      body,
-      this.options()
-    );
+  ) {
+    return this.put$(`v1/playlists/${id}`, body);
   }
 
-  /**
-   * Get a Playlist's Items
-   */
   getPlaylistItems$(
     id: string,
     params?: {
@@ -940,31 +514,18 @@ export class ApiService {
       offset?: number;
       additional_types?: string;
     }
-  ): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/playlists/${id}/tracks`,
-      this.options(params)
-    );
+  ) {
+    return this.get$(`v1/playlists/${id}/tracks`, params);
   }
 
-  /**
-   * Add Items to a Playlist
-   */
   addItemsToPlaylist$(
     id: string,
-    body?: { uris?: string; position?: number },
+    body: { uris?: string; position?: number },
     params?: { position?: number; uris?: string }
-  ): Observable<unknown> {
-    return this.http.post<unknown>(
-      `${this.root}/v1/playlists/${id}/tracks`,
-      body,
-      this.options(params)
-    );
+  ) {
+    return this.post$(`v1/playlists/${id}/tracks`, body, params);
   }
 
-  /**
-   * Reorder or Replace a Playlist's Items
-   */
   reorderOrReplacePlaylistItems$(
     id: string,
     body?: {
@@ -975,287 +536,167 @@ export class ApiService {
       snapshot_id?: string;
     },
     params?: { uris?: string }
-  ): Observable<unknown> {
-    return this.http.put<unknown>(
-      `${this.root}/v1/playlists/${id}/tracks`,
-      body,
-      this.options(params)
-    );
+  ) {
+    return this.put$(`v1/playlists/${id}/tracks`, body, params);
   }
 
-  // TODO: fix tracks object
-  /**
-   * Remove Items from a Playlist
-   */
   removeItemsFromPlaylist$(
     id: string,
     body: {
       tracks: string[];
       snapshot_id?: string;
     }
-  ): Observable<unknown> {
+  ) {
     const options = this.options();
-    return this.http.delete<unknown>(`${this.root}/v1/playlists/${id}/tracks`, {
-      headers: options.headers,
-      body,
+    return this.delete$(`v1/playlists/${id}/tracks`, {
+      // headers: options.headers,
+      // body,
     });
   }
 
-  /**
-   * Get a Playlist Cover Image
-   */
-  getPlaylistCoverImage$(id: string): Observable<unknown[]> {
-    return this.http.get<unknown[]>(
-      `${this.root}/v1/playlists/${id}/images`,
-      this.options()
-    );
+  getPlaylistCoverImage$(id: string) {
+    return this.get$(`v1/playlists/${id}/images`);
   }
 
-  // TODO: image
-  /**
-   * Upload a Custom Playlist Cover Image
-   * @
-   */
-  uploadCustomPlaylistCoverImage$(id: string): Observable<unknown> {
-    const options = this.options();
-    if (options.headers) {
-      // options.headers.set('Content-Type', 'image/jpeg');
-    }
-    return this.http.put<unknown>(
-      `${this.root}/v1/playlists/${id}/images`,
-      {},
-      {
-        headers: options.headers,
-      }
-    );
+  uploadCustomPlaylistCoverImage$(id: string) {
+    // const options = this.options();
+    // if (options.headers) {
+    //    options.headers.set('Content-Type', 'image/jpeg');
+    // }
+    return this.put$(`v1/playlists/${id}/images`, {});
   }
 
   ////////////////// Search API ////////////////////////////////
 
-  /**
-   * Search for an Item - album
-   */
   searchAlbum$(params: {
     q: string;
     market?: string;
     limit?: number;
     offset?: number;
     include_external: '' | 'audio';
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/search`,
-      this.options({
-        type: 'album',
-        ...params,
-      })
-    );
+  }) {
+    return this.get$(`v1/search`, {
+      type: 'album',
+      ...params,
+    });
   }
 
-  /**
-   * Search for an Item - artist
-   */
   searchArtist$(params: {
     q: string;
     market?: string;
     limit?: number;
     offset?: number;
     include_external: '' | 'audio';
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/search`,
-      this.options({
-        type: 'artist',
-        ...params,
-      })
-    );
+  }) {
+    return this.get$(`v1/search`, {
+      type: 'artist',
+      ...params,
+    });
   }
 
-  /**
-   * Search for an Item - playlist
-   */
   searchPlaylist$(params: {
     q: string;
     market?: string;
     limit?: number;
     offset?: number;
     include_external: '' | 'audio';
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/search`,
-      this.options({
-        type: 'playlist',
-        ...params,
-      })
-    );
+  }) {
+    return this.get$(`v1/search`, {
+      type: 'playlist',
+      ...params,
+    });
   }
 
-  /**
-   * Search for an Item - track
-   */
   searchTrack$(params: {
     q: string;
     market?: string;
     limit?: number;
     offset?: number;
     include_external: '' | 'audio';
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/search`,
-      this.options({
-        type: 'track',
-        ...params,
-      })
-    );
+  }) {
+    return this.get$(`v1/search`, {
+      type: 'track',
+      ...params,
+    });
   }
 
-  /**
-   * Search for an Item - show
-   */
   searchShow$(params: {
     q: string;
     market?: string;
     limit?: number;
     offset?: number;
     include_external: '' | 'audio';
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/search`,
-      this.options({
-        type: 'show',
-        ...params,
-      })
-    );
+  }) {
+    return this.get$(`v1/search`, {
+      type: 'show',
+      ...params,
+    });
   }
 
-  /**
-   * Search for an Item - episode
-   */
   searchEpisode$(params: {
     q: string;
     market?: string;
     limit?: number;
     offset?: number;
     include_external: '' | 'audio';
-  }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/search`,
-      this.options({
-        type: 'episode',
-        ...params,
-      })
-    );
+  }) {
+    return this.get$(`v1/search`, {
+      type: 'episode',
+      ...params,
+    });
   }
 
   ////////////////// Shows API ////////////////////////////////
 
-  /**
-   * Get Multiple Shows
-   */
-  getShows$(params: { ids: string; market?: string }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/shows`,
-      this.options(params)
-    );
+  getShows$(params: { ids: string; market?: string }) {
+    return this.get$(`v1/shows`, params);
   }
 
-  /**
-   * Get a Show
-   */
   getShow$(
     id: string,
     params?: {
       market?: string;
     }
-  ): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/shows/${id}`,
-      this.options(params)
-    );
+  ) {
+    return this.get$(`v1/shows/${id}`, params);
   }
 
-  /**
-   * Get a Show's Episodes
-   */
   getShowEpisodes$(
     id: string,
     params?: {
       market?: string;
     }
-  ): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/shows/${id}/episodes`,
-      this.options(params)
-    );
+  ) {
+    return this.get$(`v1/shows/${id}/episodes`, params);
   }
 
   ////////////////// Tracks API ////////////////////////////////
 
-  /**
-   * Get Several Tracks
-   */
-  getTracks$(params: { ids: string; market?: string }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/tracks`,
-      this.options(params)
-    );
+  getTracks$(params: { ids: string; market?: string }) {
+    return this.get$(`v1/tracks`, params);
   }
 
-  /**
-   * Get a Track
-   */
-  getTrack$(id: string, params?: { market?: string }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/tracks/${id}`,
-      this.options(params)
-    );
+  getTrack$(id: string, params?: { market?: string }) {
+    return this.get$(`v1/tracks/${id}`, params);
   }
 
-  /**
-   * Get Audio Features for Several Tracks
-   */
-  getAudioFeaturesForTracks$(params: { ids: string }): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/audio-features`,
-      this.options(params)
-    );
+  getAudioFeaturesForTracks$(params: { ids: string }) {
+    return this.get$(`v1/audio-features`, params);
   }
 
-  /**
-   * Get Audio Features for a Track
-   */
-  getAudioFeaturesForTrack$(id: string): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/audio-features/${id}`,
-      this.options()
-    );
+  getAudioFeaturesForTrack$(id: string) {
+    return this.get$(`v1/audio-features/${id}`);
   }
 
-  /**
-   * Get Audio Analysis for a Track
-   */
-  getAudioAnalysisForTrack$(id: string): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/audio-analysis/${id}`,
-      this.options()
-    );
+  getAudioAnalysisForTrack$(id: string) {
+    return this.get$(`v1/audio-analysis/${id}`);
   }
 
-  ////////////////// Users Profile API ////////////////////////////////
-
-  /**
-   * Get Current User's Profile
-   */
-  getCurrentUserProfile$(): Observable<unknown> {
-    return this.http.get<unknown>(`${this.root}/v1/me`, this.options());
+  getCurrentUserProfile$() {
+    return this.get$<SpotifyApi.CurrentUsersProfileResponse>(`v1/me`);
   }
 
-  /**
-   * Get a User's Profile
-   */
-  getUserProfile$(id: string): Observable<unknown> {
-    return this.http.get<unknown>(
-      `${this.root}/v1/users/${id}`,
-      this.options()
-    );
+  getUserProfile$(id: string) {
+    return this.get$(`v1/users/${id}`);
   }
 }
