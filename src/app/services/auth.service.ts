@@ -6,23 +6,22 @@ import { environment } from 'src/environments/environment';
 import { scopes } from '../api.config';
 import { Token, TokenResponse } from '../models';
 
+const authLink = `https://accounts.spotify.com/authorize?${new URLSearchParams([
+  ['response_type', 'code'],
+  ['client_id', environment.clientId],
+  ['scope', scopes],
+  ['redirect_uri', environment.redirectUri],
+]).toString()}`;
+
+const authBasic = btoa(`${environment.clientId}:${environment.clientSecret}`);
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private static readonly TOKEN_KEY = 'token';
-  private static readonly AUTH_LINK = `https://accounts.spotify.com/authorize?${new URLSearchParams(
-    [
-      ['response_type', 'code'],
-      ['client_id', environment.clientId],
-      ['scope', scopes],
-      ['redirect_uri', environment.redirectUri],
-    ]
-  ).toString()}`;
-  private static readonly AUTH_BASIC = btoa(
-    `${environment.clientId}:${environment.clientSecret}`
-  );
-
+  private static readonly AUTH_LINK = authLink;
+  private static readonly AUTH_BASIC = authBasic;
   private _token: Token | null = null;
 
   constructor(private http: HttpClient) {

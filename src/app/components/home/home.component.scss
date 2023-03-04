@@ -2,10 +2,25 @@
   flex: 1 1 auto;
 }
 
-.avatar {
-  background-color: transparent;
-  background-size: cover;
-  background-position: center center;
+.avatarButton {
+  background-color: rgb(100, 100, 100, 0.8);
+  border-radius: 9999px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  p {
+    margin: 0;
+    padding: 0 0.75rem 0 0.5rem;
+    font-weight: 500;
+  }
+
+  button {
+    background-color: transparent;
+    background-size: cover;
+    background-position: center center;
+  }
 }
 
 mat-drawer-container {

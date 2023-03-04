@@ -1,4 +1,7 @@
-/** FILE FROM @TYPES/SPOTIFY-API */
+/**
+ * FILE FROM @TYPES/SPOTIFY-API
+ * EXPORTED NAMESPACE
+ */
 
 // Type definitions for The Spotify Web API (including changes March 29th 2016)
 // Project: https://developer.spotify.com/web-api/

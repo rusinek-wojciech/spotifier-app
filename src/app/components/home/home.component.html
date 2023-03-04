@@ -10,16 +10,20 @@
     </button>
     <span class="spacer"></span>
     <!-- avatar -->
-    <button
-      *ngIf="user"
+    <div
+      *ngIf="user$ | async as user"
+      class="avatarButton mat-elevation-z3"
       [matMenuTriggerFor]="menu"
-      class="avatar"
-      mat-mini-fab
-      [style.backgroundImage]="'url(' + user.images?.[0]?.url ?? avatar + ')'"
-    ></button>
+    >
+      <button
+        mat-mini-fab
+        [style.backgroundImage]="getAvatarUrl(user)"
+      ></button>
+      <p class="mat-small">{{ user.display_name }}</p>
+    </div>
     <!-- menu on avatar click -->
     <mat-menu #menu="matMenu" class="menu">
-      <button mat-menu-item (click)="onClickTest()">
+      <button mat-menu-item>
         <mat-icon>dialpad</mat-icon>
         <span>Redial</span>
       </button>
