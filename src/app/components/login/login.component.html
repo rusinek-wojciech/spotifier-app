@@ -1,4 +1,7 @@
 <div class="wrapper">
+  <h1 class="mat-h1">Spotifier app</h1>
+  <p>To start you should login!</p>
+
   <mat-card class="mat-elevation-z24">
     <mat-card-header>
       <div mat-card-avatar class="header-image"></div>
@@ -7,9 +10,11 @@
     </mat-card-header>
     <mat-card-content>
       <div
+        (click)="handleClick()"
         matRipple
         class="status-wrapper mat-display-1"
         [ngClass]="{
+          login: status === Status.LOGIN,
           pending: status === Status.PENDING,
           success: status === Status.SUCCESS,
           failure: status === Status.FAILURE
@@ -18,11 +23,8 @@
         {{ status }}
       </div>
       <div class="details-wrapper">
-        <p>{{ details }}</p>
+        <p>{{ messageByStatus[status] }}</p>
       </div>
-      <button (click)="redirect()" *ngIf="status === Status.FAILURE" mat-button>
-        Try again
-      </button>
       <mat-progress-bar
         *ngIf="status === Status.PENDING"
         mode="indeterminate"

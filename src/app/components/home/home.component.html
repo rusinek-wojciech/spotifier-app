@@ -13,6 +13,7 @@
     <div
       *ngIf="user$ | async as user"
       class="avatarButton mat-elevation-z3"
+      matRipple
       [matMenuTriggerFor]="menu"
     >
       <button
@@ -31,7 +32,7 @@
         <mat-icon>voicemail</mat-icon>
         <span>Check voice mail</span>
       </button>
-      <button mat-menu-item (click)="onClickLogout()">
+      <button mat-menu-item (click)="handleLogoutClick()">
         <mat-icon>logout</mat-icon>
         <span>Logout</span>
       </button>

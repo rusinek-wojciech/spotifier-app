@@ -10,10 +10,18 @@ type CallbackParams = {
 };
 
 enum Status {
-  PENDING = 'PENDING',
-  SUCCESS = 'SUCCESS',
-  FAILURE = 'FAILURE',
+  LOGIN = 'login',
+  PENDING = 'pending',
+  SUCCESS = 'success',
+  FAILURE = 'failure',
 }
+
+const messageByStatus = {
+  [Status.LOGIN]: 'Waiting for user permission',
+  [Status.PENDING]: 'Please wait...',
+  [Status.SUCCESS]: 'You will be soon redirected',
+  [Status.FAILURE]: 'Failed to gain spotify permissions. Press to try again',
+};
 
 @Component({
   selector: 'app-login',
@@ -21,9 +29,9 @@ enum Status {
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  Status = Status;
+  readonly Status = Status;
+  readonly messageByStatus = messageByStatus;
   status = Status.PENDING;
-  details = 'Please wait...';
 
   constructor(
     private router: Router,
@@ -31,7 +39,11 @@ export class LoginComponent implements OnInit {
     private auth: AuthService
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.login();
+  }
+
+  private login() {
     this.route.queryParams
       .pipe(
         mergeMap(({ code, error }: CallbackParams) => {
@@ -47,25 +59,26 @@ export class LoginComponent implements OnInit {
         next: ({ token, error, isAuth }) => {
           if (token || isAuth) {
             this.status = Status.SUCCESS;
-            this.details = 'You will be soon redirect!';
             this.router.navigate(['/home']);
             return;
           }
           if (error) {
             this.status = Status.FAILURE;
-            this.details = error;
+            console.error(error);
             return;
           }
-          this.redirect();
+          this.status = Status.LOGIN;
         },
         error: (err: HttpErrorResponse) => {
           this.status = Status.FAILURE;
-          this.details = err.error.error_description;
+          console.error(err);
         },
       });
   }
 
-  redirect() {
-    this.auth.redirect();
+  handleClick() {
+    if (this.status === Status.LOGIN || this.status === Status.FAILURE) {
+      this.auth.redirect();
+    }
   }
 }
