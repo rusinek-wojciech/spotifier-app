@@ -3,7 +3,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { shareReplay } from 'rxjs';
-import { SpotifyApi } from 'src/app/models/spotify-api';
+import { SpotifyApi } from 'src/app/models';
 import { Router } from '@angular/router';
 
 @Component({
@@ -22,9 +22,13 @@ export class HomeComponent {
     private router: Router
   ) {}
 
-  handleLogoutClick(): void {
+  handleLogoutClick() {
     this.auth.logout();
     this.router.navigate(['/login']);
+  }
+
+  handleProfileClick() {
+    this.router.navigate(['/user-profile']);
   }
 
   getAvatarUrl(user: SpotifyApi.CurrentUsersProfileResponse) {

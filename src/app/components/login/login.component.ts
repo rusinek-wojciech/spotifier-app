@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, mergeMap, of } from 'rxjs';
@@ -69,9 +68,9 @@ export class LoginComponent implements OnInit {
           }
           this.status = Status.LOGIN;
         },
-        error: (err: HttpErrorResponse) => {
+        error: (error) => {
           this.status = Status.FAILURE;
-          console.error(err);
+          console.error(error);
         },
       });
   }

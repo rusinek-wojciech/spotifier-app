@@ -3,8 +3,29 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, shareReplay, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { scopes } from '../api.config';
-import { Token, TokenResponse } from '../models';
+import { Scope, Token, TokenResponse } from '../models';
+
+const scopes = [
+  Scope.UGC_IMAGE_UPLOAD,
+  Scope.PLAYLIST_MODIFY_PRIVATE,
+  Scope.PLAYLIST_READ_PRIVATE,
+  Scope.PLAYLIST_MODIFY_PUBLIC,
+  Scope.PLAYLIST_READ_COLLABORATIVE,
+  Scope.USER_READ_PRIVATE,
+  Scope.USER_READ_EMAIL,
+  Scope.USER_READ_PLAYBACK_STATE,
+  Scope.USER_MODIFY_PLAYBACK_STATE,
+  Scope.USER_READ_CURRENTLY_PLAYING,
+  Scope.USER_LIBRARY_MODIFY,
+  Scope.USER_LIBRARY_READ,
+  Scope.USER_READ_PLAYBACK_POSITION,
+  Scope.USER_READ_RECENTLY_PLAYED,
+  Scope.USER_TOP_READ,
+  Scope.APP_REMOTE_CONTROL,
+  Scope.STREAMING,
+  Scope.USER_FOLLOW_MODIFY,
+  Scope.USER_FOLLOW_READ,
+].join(' ');
 
 const authLink = `https://accounts.spotify.com/authorize?${new URLSearchParams([
   ['response_type', 'code'],
@@ -51,7 +72,7 @@ export class AuthService {
     this.setToken(token);
   }
 
-  redirect(): void {
+  redirect() {
     window.location.href = AuthService.AUTH_LINK;
   }
 

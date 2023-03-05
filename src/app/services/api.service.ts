@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
-import { SpotifyApi } from '../models/spotify-api';
+import { SpotifyApi } from '../models';
 
 type Params =
   | HttpParams
@@ -458,7 +458,10 @@ export class ApiService {
   ////////////////// Playlists API ////////////////////////////////
 
   getListOfCurrentUserPlaylists$(params?: { limit?: number; offset?: number }) {
-    return this.get$(`v1/me/playlists`, params);
+    return this.get$<SpotifyApi.ListOfUsersPlaylistsResponse>(
+      `v1/me/playlists`,
+      params
+    );
   }
 
   getListOfUserPlaylists$(
