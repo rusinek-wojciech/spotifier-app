@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatListModule } from '@angular/material/list';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 const materials = [
   MatCardModule,
@@ -24,6 +25,7 @@ const materials = [
   MatSidenavModule,
   MatMenuModule,
   MatListModule,
+  MatPaginatorModule,
 ];
 
 @NgModule({
