@@ -1,1 +1,18 @@
-<p>generate-playlist works!</p>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="acousticness">acousticness</label>
+    <input id="acousticness" type="number" formControlName="acousticness" />
+  </div>
+
+  <div>
+    <label for="energy">energy</label>
+    <input id="energy" type="number" formControlName="energy" />
+  </div>
+
+  <div>
+    <label for="loudness">loudness</label>
+    <input id="loudness" type="number" formControlName="loudness" />
+  </div>
+
+  <button class="button" type="submit">Submit</button>
+</form>

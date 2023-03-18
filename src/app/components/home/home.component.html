@@ -9,39 +9,20 @@
       </ng-template>
     </button>
     <span class="spacer"></span>
-    <!-- avatar -->
-    <div
+    <app-user-avatar
       *ngIf="user$ | async as user"
-      class="avatarButton mat-elevation-z3"
-      matRipple
-      [matMenuTriggerFor]="menu">
-      <button
-        mat-mini-fab
-        [style.backgroundImage]="getAvatarUrl(user)"></button>
-      <p class="mat-small">{{ user.display_name }}</p>
-    </div>
-    <!-- menu on avatar click -->
-    <mat-menu #menu="matMenu" class="menu">
-      <button mat-menu-item (click)="handleProfileClick()">
-        <mat-icon>dialpad</mat-icon>
-        <span>Profile</span>
-      </button>
-      <button mat-menu-item (click)="handleLogoutClick()">
-        <mat-icon>logout</mat-icon>
-        <span>Logout</span>
-      </button>
-    </mat-menu>
+      [user]="user"></app-user-avatar>
   </mat-toolbar-row>
 </mat-toolbar>
 <!-- container -->
 <mat-drawer-container autosize>
   <!-- side menu -->
-  <mat-drawer #drawer mode="side">
+  <mat-drawer #drawer mode="side" mode="push">
     <mat-selection-list
       [multiple]="false"
       [hideSingleSelectionIndicator]="true">
       <mat-list-option routerLink="playlists">Playlists</mat-list-option>
-      <mat-list-option routerLink="tracks">Tracks</mat-list-option>
+      <mat-list-option routerLink="generate-playlist">Generate</mat-list-option>
     </mat-selection-list>
   </mat-drawer>
   <!-- content -->

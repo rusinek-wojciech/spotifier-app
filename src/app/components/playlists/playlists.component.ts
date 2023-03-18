@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { shareReplay } from 'rxjs';
 import { SpotifyApi } from 'src/app/models';
 import { ApiService } from 'src/app/services/api.service';
-import { PaginationEvent } from 'src/app/shared/paginator/paginator.component';
+import { PaginationEvent } from 'src/app/shared/components/paginator/paginator.component';
 
 @Component({
   selector: 'app-playlists',

@@ -9,7 +9,6 @@ export interface PaginationEvent {
 @Component({
   selector: 'app-paginator',
   templateUrl: './paginator.component.html',
-  styleUrls: ['./paginator.component.scss'],
 })
 export class PaginatorComponent implements OnInit {
   pageSize = 10;
