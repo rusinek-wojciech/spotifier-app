@@ -1,42 +1,32 @@
-import { Component, OnInit } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
+import { Component } from '@angular/core';
 import { shareReplay } from 'rxjs';
 import { SpotifyApi } from 'src/app/models';
 import { ApiService } from 'src/app/services/api.service';
+import { PaginationEvent } from 'src/app/shared/paginator/paginator.component';
 
 @Component({
   selector: 'app-playlists',
   templateUrl: './playlists.component.html',
   styleUrls: ['./playlists.component.scss'],
 })
-export class PlaylistsComponent implements OnInit {
-  readonly pageSize = 10;
-  total = 0;
-  pageIndex = 0;
+export class PlaylistsComponent {
+  length = 0;
 
   playlists: SpotifyApi.PlaylistObjectSimplified[] = [];
 
   constructor(private api: ApiService) {}
 
-  ngOnInit() {
-    this.getPlaylistsWithPagination();
+  onPaginatorChange(event: PaginationEvent) {
+    this.getPlaylistsWithPagination(event);
   }
 
-  handlePageEvent(event: PageEvent) {
-    this.pageIndex = event.pageIndex;
-    this.getPlaylistsWithPagination();
-  }
-
-  private getPlaylistsWithPagination() {
+  private getPlaylistsWithPagination(event: PaginationEvent) {
     this.api
-      .getListOfCurrentUserPlaylists$({
-        limit: this.pageSize,
-        offset: this.pageIndex * this.pageSize,
-      })
+      .getListOfCurrentUserPlaylists$(event)
       .pipe(shareReplay(1))
       .subscribe((playlists) => {
         this.playlists = playlists.items;
-        this.total = playlists.total;
+        this.length = playlists.total;
       });
   }
 }

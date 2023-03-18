@@ -1,7 +1,7 @@
 .wrapper {
   height: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   background: rgb(29, 185, 84);
@@ -13,7 +13,6 @@
 }
 
 mat-card {
-  margin-top: 4rem;
   min-width: 16rem;
   border-radius: 1rem;
 }

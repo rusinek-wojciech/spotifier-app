@@ -5,13 +5,5 @@
     <div matListItemLine>{{ playlist.description }}</div>
   </mat-list-item>
 </mat-list>
-
-<mat-paginator
-  (page)="handlePageEvent($event)"
-  [length]="total"
-  [pageSize]="pageSize"
-  [showFirstLastButtons]="true"
-  [hidePageSize]="true"
-  [pageIndex]="pageIndex"
->
-</mat-paginator>
+<app-paginator (onChange)="onPaginatorChange($event)" [length]="length">
+</app-paginator>

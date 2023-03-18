@@ -39,8 +39,12 @@
 <mat-drawer-container autosize>
   <!-- side menu -->
   <mat-drawer #drawer mode="side">
-    <mat-selection-list [multiple]="false">
+    <mat-selection-list
+      [multiple]="false"
+      [hideSingleSelectionIndicator]="true"
+    >
       <mat-list-option routerLink="playlists">Playlists</mat-list-option>
+      <mat-list-option routerLink="tracks">Tracks</mat-list-option>
     </mat-selection-list>
   </mat-drawer>
   <!-- content -->

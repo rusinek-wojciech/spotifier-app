@@ -12,6 +12,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatListModule } from '@angular/material/list';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { PaginatorComponent } from './paginator/paginator.component';
+import { PaginatedListComponent } from './paginated-list/paginated-list.component';
 
 const materials = [
   MatCardModule,
@@ -28,8 +30,11 @@ const materials = [
   MatPaginatorModule,
 ];
 
+const components = [PaginatorComponent, PaginatedListComponent];
+
 @NgModule({
-  declarations: [],
-  exports: [CommonModule, ...materials],
+  declarations: [...components],
+  imports: [...materials],
+  exports: [CommonModule, ...materials, ...components],
 })
 export class SharedModule {}
