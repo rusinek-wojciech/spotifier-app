@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { GeneratePlaylistComponent } from 'src/app/components/generate-playlist/generate-playlist.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { PlaylistsComponent } from './components/playlists/playlists.component';
@@ -19,6 +20,10 @@ const routes: Routes = [
       {
         path: 'playlists',
         component: PlaylistsComponent,
+      },
+      {
+        path: 'generate-playlist',
+        component: GeneratePlaylistComponent,
       },
     ],
   },

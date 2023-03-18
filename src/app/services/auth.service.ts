@@ -96,8 +96,8 @@ export class AuthService {
         }
       )
       .pipe(
-        map((res) => new Token(res)),
-        tap((token) => this.login(token)),
+        map(res => new Token(res)),
+        tap(token => this.login(token)),
         shareReplay()
       );
   }

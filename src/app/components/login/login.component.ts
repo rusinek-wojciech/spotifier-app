@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
           return code && !isAuth
             ? this.auth
                 .fetchToken$(code)
-                .pipe(map((token) => ({ token, error: null, isAuth: false })))
+                .pipe(map(token => ({ token, error: null, isAuth: false })))
             : of({ token: null, error, isAuth });
         })
       )
@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit {
           }
           this.status = Status.LOGIN;
         },
-        error: (error) => {
+        error: error => {
           this.status = Status.FAILURE;
           console.error(error);
         },

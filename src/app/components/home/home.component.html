@@ -14,12 +14,10 @@
       *ngIf="user$ | async as user"
       class="avatarButton mat-elevation-z3"
       matRipple
-      [matMenuTriggerFor]="menu"
-    >
+      [matMenuTriggerFor]="menu">
       <button
         mat-mini-fab
-        [style.backgroundImage]="getAvatarUrl(user)"
-      ></button>
+        [style.backgroundImage]="getAvatarUrl(user)"></button>
       <p class="mat-small">{{ user.display_name }}</p>
     </div>
     <!-- menu on avatar click -->
@@ -41,8 +39,7 @@
   <mat-drawer #drawer mode="side">
     <mat-selection-list
       [multiple]="false"
-      [hideSingleSelectionIndicator]="true"
-    >
+      [hideSingleSelectionIndicator]="true">
       <mat-list-option routerLink="playlists">Playlists</mat-list-option>
       <mat-list-option routerLink="tracks">Tracks</mat-list-option>
     </mat-selection-list>

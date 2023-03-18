@@ -1,22 +1,22 @@
 function secrets() {
-  const fs = require("fs");
-  const colors = require("colors");
-  const version = require("../package.json").version;
-  require("dotenv").config({
-    path: ".env",
+  const fs = require('fs');
+  const colors = require('colors');
+  const version = require('../package.json').version;
+  require('dotenv').config({
+    path: '.env',
   });
 
-  const targetPath = "./src/environments/environment.ts";
+  const targetPath = './src/environments/environment.ts';
   const envConfigFile = `export const environment = {
     version: '${version}',
     production: false,
-    redirectUri: '${process.env["REDIRECT_URI"]}',
-    clientId: '${process.env["CLIENT_ID"]}',
-    clientSecret: '${process.env["CLIENT_SECRET"]}',
+    redirectUri: '${process.env['REDIRECT_URI']}',
+    clientId: '${process.env['CLIENT_ID']}',
+    clientSecret: '${process.env['CLIENT_SECRET']}',
   };
   `;
-  console.log(colors.magenta("The file `environment.ts` will be written"));
-  fs.writeFile(targetPath, envConfigFile, (err) => {
+  console.log(colors.magenta('The file `environment.ts` will be written'));
+  fs.writeFile(targetPath, envConfigFile, err => {
     if (err) {
       console.error(err);
       throw err;

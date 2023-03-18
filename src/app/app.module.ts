@@ -9,6 +9,7 @@ import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { PlaylistsComponent } from './components/playlists/playlists.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { GeneratePlaylistComponent } from './components/generate-playlist/generate-playlist.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     HomeComponent,
     LoginComponent,
     PlaylistsComponent,
+    GeneratePlaylistComponent,
   ],
   exports: [],
   imports: [

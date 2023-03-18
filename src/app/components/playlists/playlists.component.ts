@@ -24,7 +24,7 @@ export class PlaylistsComponent {
     this.api
       .getListOfCurrentUserPlaylists$(event)
       .pipe(shareReplay(1))
-      .subscribe((playlists) => {
+      .subscribe(playlists => {
         this.playlists = playlists.items;
         this.length = playlists.total;
       });
