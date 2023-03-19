@@ -9,9 +9,7 @@
       </ng-template>
     </button>
     <span class="spacer"></span>
-    <app-user-avatar
-      *ngIf="user$ | async as user"
-      [user]="user"></app-user-avatar>
+    <app-user-avatar *ngIf="user$ | async as user" [user]="user" />
   </mat-toolbar-row>
 </mat-toolbar>
 <!-- container -->

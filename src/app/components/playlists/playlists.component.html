@@ -1,9 +1,13 @@
-<mat-list>
-  <mat-list-item *ngFor="let playlist of playlists" lines="3">
-    <img matListItemAvatar [src]="playlist.images[0].url" />
-    <div matListItemTitle>{{ playlist.name }}</div>
-    <div matListItemLine>{{ playlist.description }}</div>
-  </mat-list-item>
-</mat-list>
-<app-paginator (onChange)="onPaginatorChange($event)" [length]="length">
-</app-paginator>
+<app-pagination [length]="length" (onChange)="handlePaginationChange($event)">
+  <mat-grid-list [cols]="cols" gutterSize="1rem">
+    <mat-grid-tile *ngFor="let playlist of playlists">
+      <mat-card>
+        <mat-card-header class="mat-elevation-z4">
+          <mat-card-title>{{ playlist.name }}</mat-card-title>
+          <mat-card-subtitle>{{ playlist.description }}</mat-card-subtitle>
+        </mat-card-header>
+        <img mat-card-image [src]="image(playlist)" />
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+</app-pagination>

@@ -12,13 +12,13 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatListModule } from '@angular/material/list';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { PaginatorComponent } from './components/paginator/paginator.component';
-import { PaginatedListComponent } from './components/paginated-list/paginated-list.component';
+import { PaginationComponent } from './components/pagination/pagination.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from 'src/app/app-routing.module';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 const materials = [
   MatCardModule,
@@ -33,6 +33,7 @@ const materials = [
   MatMenuModule,
   MatListModule,
   MatPaginatorModule,
+  MatGridListModule,
 ];
 
 const angular = [
@@ -44,7 +45,7 @@ const angular = [
   AppRoutingModule,
 ];
 
-const components = [PaginatorComponent, PaginatedListComponent];
+const components = [PaginationComponent];
 
 @NgModule({
   declarations: [...components],

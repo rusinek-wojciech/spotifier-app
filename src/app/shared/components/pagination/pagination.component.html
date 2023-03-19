@@ -1,0 +1,12 @@
+<div class="container">
+  <ng-content />
+</div>
+
+<mat-paginator
+  (page)="handlePageEvent($event)"
+  [length]="length"
+  [pageSize]="pageSize"
+  [showFirstLastButtons]="true"
+  [hidePageSize]="false"
+  [pageIndex]="pageIndex"
+  [pageSizeOptions]="pageSizeOptions" />
