@@ -4,9 +4,13 @@ import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService) {}
+  constructor(private auth: AuthService) {}
 
   canActivate(): boolean {
-    return this.authService.isAuthenticated();
+    if (this.auth.isValidToken()) {
+      return true;
+    }
+    this.auth.logout();
+    return false;
   }
 }

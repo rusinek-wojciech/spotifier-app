@@ -1,12 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { map, mergeMap, of } from 'rxjs';
+import { Router } from '@angular/router';
+import { SPOTIFY_AUTH_URL_LINK } from 'src/app/constants/auth.constants';
+import { PATHS } from 'src/app/constants/paths.constants';
 import { AuthService } from 'src/app/services/auth.service';
-
-type CallbackParams = {
-  code?: string;
-  error?: string;
-};
 
 enum Status {
   LOGIN = 'login',
@@ -33,53 +29,32 @@ export class LoginComponent implements OnInit {
 
   status = Status.PENDING;
 
-  constructor(private route: ActivatedRoute, private auth: AuthService) {}
+  constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit() {
     this.login();
   }
 
   private login() {
-    this.route.queryParams
-      .pipe(
-        mergeMap(({ code, error }: CallbackParams) => {
-          const isAuth = this.auth.isAuthenticated();
-          return code && !isAuth
-            ? this.auth
-                .fetchToken$(code)
-                .pipe(map(token => ({ token, error: null, isAuth: false })))
-            : of({ token: null, error, isAuth });
-        })
-      )
-      .subscribe({
-        next: ({ token, error, isAuth }) => {
-          if (isAuth) {
-            this.status = Status.SUCCESS;
-            this.auth.login(this.auth.token);
-            return;
-          }
-          if (token) {
-            this.status = Status.SUCCESS;
-            this.auth.login(token);
-            return;
-          }
-          if (error) {
-            this.status = Status.FAILURE;
-            console.error(error);
-            return;
-          }
-          this.status = Status.LOGIN;
-        },
-        error: error => {
-          this.status = Status.FAILURE;
-          console.error(error);
-        },
-      });
+    this.auth.login$().subscribe({
+      next: success => {
+        if (success) {
+          this.status = Status.SUCCESS;
+          setTimeout(() => this.router.navigate([PATHS.HOME]), 300);
+          return;
+        }
+        this.status = Status.LOGIN;
+      },
+      error: error => {
+        this.status = Status.FAILURE;
+        console.error(error);
+      },
+    });
   }
 
   handleClick() {
     if (this.status === Status.LOGIN || this.status === Status.FAILURE) {
-      this.auth.redirectToSpotify();
+      window.location.href = SPOTIFY_AUTH_URL_LINK;
     }
   }
 }
