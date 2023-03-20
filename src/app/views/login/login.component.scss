@@ -4,12 +4,15 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background: rgb(29, 185, 84);
   background: linear-gradient(
-    218deg,
-    rgba(29, 185, 84, 1) 0%,
-    rgba(255, 255, 255, 1) 100%
-  );
+      218deg,
+      rgba(29, 185, 84, 0.85) 0%,
+      rgba(255, 255, 255, 0.85) 100%
+    ),
+    url('/assets/images/spotify-logo.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 mat-card {
@@ -18,7 +21,7 @@ mat-card {
 }
 
 .header-image {
-  background-image: url('../../../assets/images/spotify-logo.png');
+  background-image: url('/assets/images/spotify-logo.png');
   background-size: cover;
 }
 
