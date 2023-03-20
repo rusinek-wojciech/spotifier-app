@@ -1,5 +1,5 @@
 <app-pagination [length]="length" (onChange)="handlePaginationChange($event)">
-  <mat-grid-list [cols]="cols" gutterSize="1rem">
+  <mat-grid-list [cols]="columns" gutterSize="1rem">
     <mat-grid-tile *ngFor="let playlist of playlists">
       <mat-card>
         <mat-card-header class="mat-elevation-z4">

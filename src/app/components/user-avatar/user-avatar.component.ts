@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { PATHS } from 'src/app/constants/paths.constants';
 import { SpotifyApi } from 'src/app/models';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -9,18 +9,15 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./user-avatar.component.scss'],
 })
 export class UserAvatarComponent {
+  readonly PATHS = PATHS;
+
   @Input() user!: SpotifyApi.CurrentUsersProfileResponse;
   private static readonly AVATAR = 'assets/images/avatar.png';
 
-  constructor(private auth: AuthService, private router: Router) {}
-
-  handleSettingsClick() {
-    this.router.navigate(['home', 'settings']);
-  }
+  constructor(private auth: AuthService) {}
 
   handleLogoutClick() {
     this.auth.logout();
-    this.router.navigate(['login']);
   }
 
   get avatarImage() {

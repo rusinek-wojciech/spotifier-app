@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { map, mergeMap, of } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -30,13 +30,10 @@ const messageByStatus = {
 export class LoginComponent implements OnInit {
   readonly Status = Status;
   readonly messageByStatus = messageByStatus;
+
   status = Status.PENDING;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private auth: AuthService
-  ) {}
+  constructor(private route: ActivatedRoute, private auth: AuthService) {}
 
   ngOnInit() {
     this.login();
@@ -56,9 +53,14 @@ export class LoginComponent implements OnInit {
       )
       .subscribe({
         next: ({ token, error, isAuth }) => {
-          if (token || isAuth) {
+          if (isAuth) {
             this.status = Status.SUCCESS;
-            this.router.navigate(['/home']);
+            this.auth.login(this.auth.token);
+            return;
+          }
+          if (token) {
+            this.status = Status.SUCCESS;
+            this.auth.login(token);
             return;
           }
           if (error) {
@@ -77,7 +79,7 @@ export class LoginComponent implements OnInit {
 
   handleClick() {
     if (this.status === Status.LOGIN || this.status === Status.FAILURE) {
-      this.auth.redirect();
+      this.auth.redirectToSpotify();
     }
   }
 }

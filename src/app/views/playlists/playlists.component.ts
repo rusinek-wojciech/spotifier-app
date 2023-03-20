@@ -4,7 +4,15 @@ import { ApiService } from 'src/app/services/api.service';
 import { PaginationEvent } from 'src/app/shared/components/pagination/pagination.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
-const breakpoints = {
+const breakpointsToObserve = [
+  Breakpoints.XSmall,
+  Breakpoints.Small,
+  Breakpoints.Medium,
+  Breakpoints.Large,
+  Breakpoints.XLarge,
+];
+
+const breakpointToColumn = {
   [Breakpoints.XSmall]: 2,
   [Breakpoints.Small]: 3,
   [Breakpoints.Medium]: 4,
@@ -18,41 +26,39 @@ const breakpoints = {
   styleUrls: ['./playlists.component.scss'],
 })
 export class PlaylistsComponent {
-  length = 0;
+  length: number = 0;
+  columns: number = 0;
   playlists: SpotifyApi.PlaylistObjectSimplified[] = [];
-  cols: number = 0;
 
   constructor(
     private api: ApiService,
     private breakpointObserver: BreakpointObserver
   ) {
-    this.breakpointObserver
-      .observe([
-        Breakpoints.XSmall,
-        Breakpoints.Small,
-        Breakpoints.Medium,
-        Breakpoints.Large,
-        Breakpoints.XLarge,
-      ])
-      .subscribe(result => {
-        if (result.matches) {
-          const [size, _] = Object.entries(result.breakpoints).find(
-            b => !!b[1]
-          )!;
-          this.cols = breakpoints[size];
-        }
-      });
+    this.setBreakpointObserver();
   }
 
   handlePaginationChange(event: PaginationEvent) {
     this.getPlaylistsWithPagination(event);
   }
 
+  private setBreakpointObserver() {
+    this.breakpointObserver
+      .observe(breakpointsToObserve)
+      .subscribe(({ matches, breakpoints }) => {
+        if (matches) {
+          const [key] = Object.entries(breakpoints).find(([_, v]) => v)!;
+          this.columns = breakpointToColumn[key];
+        }
+      });
+  }
+
   private getPlaylistsWithPagination(event: PaginationEvent) {
-    this.api.getListOfCurrentUserPlaylists$(event).subscribe(playlists => {
-      this.playlists = playlists.items;
-      this.length = playlists.total;
-    });
+    this.api
+      .getListOfCurrentUserPlaylists$(event)
+      .subscribe(({ items, total }) => {
+        this.playlists = items;
+        this.length = total;
+      });
   }
 
   image(playlist: SpotifyApi.PlaylistObjectSimplified) {

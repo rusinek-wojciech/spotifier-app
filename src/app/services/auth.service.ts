@@ -1,11 +1,15 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map, shareReplay, tap } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
+import { PATHS } from 'src/app/constants/paths.constants';
 import { environment } from 'src/environments/environment';
 import { Scope, Token, TokenResponse } from '../models';
 
-const scopes = [
+const TOKEN_KEY = 'token';
+
+const SCOPES = [
   Scope.UGC_IMAGE_UPLOAD,
   Scope.PLAYLIST_MODIFY_PRIVATE,
   Scope.PLAYLIST_READ_PRIVATE,
@@ -27,27 +31,30 @@ const scopes = [
   Scope.USER_FOLLOW_READ,
 ].join(' ');
 
-const authLink = `https://accounts.spotify.com/authorize?${new URLSearchParams([
-  ['response_type', 'code'],
-  ['client_id', environment.clientId],
-  ['scope', scopes],
-  ['redirect_uri', environment.redirectUri],
-]).toString()}`;
+const AUTH_LINK = `https://accounts.spotify.com/authorize?${new URLSearchParams(
+  [
+    ['response_type', 'code'],
+    ['client_id', environment.clientId],
+    ['scope', SCOPES],
+    ['redirect_uri', environment.redirectUri],
+  ]
+).toString()}`;
 
-const authBasic = btoa(`${environment.clientId}:${environment.clientSecret}`);
+const AUTH_BASIC = btoa(`${environment.clientId}:${environment.clientSecret}`);
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private static readonly TOKEN_KEY = 'token';
-  private static readonly AUTH_LINK = authLink;
-  private static readonly AUTH_BASIC = authBasic;
   private _token: Token | null = null;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     this._token = this.getToken();
     this.isAuthenticated();
+  }
+
+  get token() {
+    return this._token!;
   }
 
   isAuthenticated(): boolean {
@@ -63,21 +70,19 @@ export class AuthService {
   }
 
   logout() {
-    // notify subscribers of token
     this.removeToken();
+    if (location.pathname !== PATHS.LOGIN) {
+      this.router.navigate([PATHS.LOGIN]);
+    }
   }
 
   login(token: Token) {
-    // notify subscribers of token
     this.setToken(token);
+    this.router.navigate([PATHS.HOME]);
   }
 
-  redirect() {
-    window.location.href = AuthService.AUTH_LINK;
-  }
-
-  get token() {
-    return this._token!;
+  redirectToSpotify() {
+    window.location.href = AUTH_LINK;
   }
 
   fetchToken$(code: string): Observable<Token> {
@@ -91,29 +96,28 @@ export class AuthService {
         {
           headers: new HttpHeaders({
             'Content-Type': 'application/x-www-form-urlencoded',
-            Authorization: `Basic ${AuthService.AUTH_BASIC}`,
+            Authorization: `Basic ${AUTH_BASIC}`,
           }),
         }
       )
       .pipe(
         map(res => new Token(res)),
-        tap(token => this.login(token)),
         shareReplay()
       );
   }
 
   private removeToken() {
     this._token = null;
-    localStorage.removeItem(AuthService.TOKEN_KEY);
+    localStorage.removeItem(TOKEN_KEY);
   }
 
   private setToken(token: Token) {
     this._token = token;
-    localStorage.setItem(AuthService.TOKEN_KEY, JSON.stringify(token));
+    localStorage.setItem(TOKEN_KEY, JSON.stringify(token));
   }
 
   private getToken() {
-    const token = localStorage.getItem(AuthService.TOKEN_KEY);
+    const token = localStorage.getItem(TOKEN_KEY);
     return token ? (JSON.parse(token) as Token) : null;
   }
 }

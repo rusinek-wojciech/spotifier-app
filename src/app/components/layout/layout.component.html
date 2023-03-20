@@ -1,29 +1,27 @@
-<!-- toolbar -->
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <!-- menu -->
     <button mat-icon-button (click)="drawer.toggle()">
-      <mat-icon *ngIf="drawer.opened; else elseBlock">close</mat-icon>
-      <ng-template #elseBlock>
-        <mat-icon>menu</mat-icon>
-      </ng-template>
+      <mat-icon [fontIcon]="drawer.opened ? 'close' : 'menu'" />
     </button>
     <span class="spacer"></span>
     <app-user-avatar *ngIf="user$ | async as user" [user]="user" />
   </mat-toolbar-row>
 </mat-toolbar>
-<!-- container -->
+
 <mat-drawer-container autosize>
-  <!-- side menu -->
-  <mat-drawer #drawer mode="side" mode="push">
+  <mat-drawer #drawer mode="side" mode="side">
     <mat-selection-list
       [multiple]="false"
       [hideSingleSelectionIndicator]="true">
-      <mat-list-option routerLink="playlists">Playlists</mat-list-option>
-      <mat-list-option routerLink="generate-playlist">Generate</mat-list-option>
+      <mat-list-option [routerLink]="PATHS.HOME">Home</mat-list-option>
+      <mat-list-option [routerLink]="PATHS.PLAYLISTS"
+        >Playlists</mat-list-option
+      >
+      <mat-list-option [routerLink]="PATHS.GENERATE_PLAYLIST"
+        >Generate</mat-list-option
+      >
     </mat-selection-list>
   </mat-drawer>
-  <!-- content -->
   <mat-drawer-content>
     <router-outlet></router-outlet>
   </mat-drawer-content>

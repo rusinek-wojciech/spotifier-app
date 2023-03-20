@@ -4,7 +4,7 @@
 </div>
 
 <mat-menu #menu>
-  <button mat-menu-item (click)="handleSettingsClick()">
+  <button mat-menu-item [routerLink]="PATHS.SETTINGS">
     <mat-icon>settings</mat-icon>
     <span>Settings</span>
   </button>

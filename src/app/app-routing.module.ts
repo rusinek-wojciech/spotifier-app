@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { GeneratePlaylistComponent } from 'src/app/components/generate-playlist/generate-playlist.component';
-import { SettingsComponent } from 'src/app/components/settings/settings.component';
-import { HomeComponent } from './components/home/home.component';
-import { LoginComponent } from './components/login/login.component';
-import { PlaylistsComponent } from './components/playlists/playlists.component';
+import { GeneratePlaylistComponent } from 'src/app/views/generate-playlist/generate-playlist.component';
+import { SettingsComponent } from 'src/app/views/settings/settings.component';
+import { HomeComponent } from './views/home/home.component';
+import { LoginComponent } from './views/login/login.component';
+import { PlaylistsComponent } from './views/playlists/playlists.component';
 import { AuthGuard } from './guards/auth.guard';
+import { LayoutComponent } from 'src/app/components/layout/layout.component';
 
 const routes: Routes = [
   {
@@ -15,9 +16,13 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomeComponent,
+    component: LayoutComponent,
     canActivate: [AuthGuard],
     children: [
+      {
+        path: '',
+        component: HomeComponent,
+      },
       {
         path: 'playlists',
         component: PlaylistsComponent,
