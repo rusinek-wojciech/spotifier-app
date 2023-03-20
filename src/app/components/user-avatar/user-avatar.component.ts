@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { PATHS } from 'src/app/constants/paths.constants';
 import { SpotifyApi } from 'src/app/models';
-import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-user-avatar[user]',
@@ -14,11 +13,7 @@ export class UserAvatarComponent {
   @Input() user!: SpotifyApi.CurrentUsersProfileResponse;
   private static readonly AVATAR = 'assets/images/avatar.png';
 
-  constructor(private auth: AuthService) {}
-
-  handleLogoutClick() {
-    this.auth.logout();
-  }
+  constructor() {}
 
   get avatarImage() {
     const avatar = this.user.images?.[0]?.url ?? UserAvatarComponent.AVATAR;

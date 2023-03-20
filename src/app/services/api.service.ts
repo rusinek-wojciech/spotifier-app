@@ -24,7 +24,7 @@ export class ApiService {
   private options(params?: Params) {
     return {
       headers: new HttpHeaders({
-        Authorization: `Bearer ${this.auth.token.accessToken}`,
+        Authorization: `Bearer ${this.auth.token!.accessToken}`,
         'Content-Type': 'application/json',
       }),
       params,

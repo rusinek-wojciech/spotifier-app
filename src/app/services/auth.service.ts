@@ -14,6 +14,7 @@ import { Token, TokenResponse } from '../models';
 type CallbackParams = {
   code?: string;
   error?: string;
+  logout?: boolean;
 };
 
 const TOKEN_KEY = 'token';
@@ -31,24 +32,23 @@ export class AuthService {
     private route: ActivatedRoute
   ) {
     const token = this.getTokenFromStorage();
-    this.isValidToken(token) ? this.setToken(token!) : this.logout();
+    token && Date.now() < token.validTo
+      ? this.setToken(token)
+      : this.removeToken();
   }
 
   get token() {
-    return this._token!;
+    return this._token;
   }
 
-  logout() {
-    this.removeToken();
-    if (location.pathname !== PATHS.LOGIN) {
-      this.router.navigate([PATHS.LOGIN]);
-    }
-  }
-
-  login$() {
+  authenticate$() {
     return this.route.queryParams.pipe(
-      mergeMap(({ code, error }: CallbackParams) => {
-        if (this.isValidToken()) {
+      mergeMap(({ code, error, logout }: CallbackParams) => {
+        if (logout) {
+          this.removeToken();
+          return of(false);
+        }
+        if (this.token) {
           return of(true);
         }
         if (error) {
@@ -65,10 +65,6 @@ export class AuthService {
         return of(false);
       })
     );
-  }
-
-  isValidToken(token = this._token) {
-    return !!token && Date.now() < token.validTo;
   }
 
   private fetchToken$(code: string): Observable<Token> {
@@ -93,10 +89,18 @@ export class AuthService {
   private setToken(token: Token) {
     this._token = token;
     localStorage.setItem(TOKEN_KEY, JSON.stringify(token));
+    this.setLogoutTimer(token);
+  }
+
+  private setLogoutTimer(token: Token) {
     this._timerSub.unsubscribe();
-    this._timerSub = timer(token.validTo - Date.now()).subscribe(() =>
-      this.logout()
-    );
+    const ms = token.validTo - Date.now();
+    this._timerSub = timer(ms).subscribe(() => {
+      this.removeToken();
+      if (location.pathname !== PATHS.LOGIN) {
+        this.router.navigate([PATHS.LOGIN]);
+      }
+    });
   }
 
   private getTokenFromStorage() {

@@ -32,18 +32,14 @@ export class LoginComponent implements OnInit {
   constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit() {
-    this.login();
-  }
-
-  private login() {
-    this.auth.login$().subscribe({
+    this.auth.authenticate$().subscribe({
       next: success => {
         if (success) {
           this.status = Status.SUCCESS;
           setTimeout(() => this.router.navigate([PATHS.HOME]), 300);
-          return;
+        } else {
+          this.status = Status.LOGIN;
         }
-        this.status = Status.LOGIN;
       },
       error: error => {
         this.status = Status.FAILURE;
