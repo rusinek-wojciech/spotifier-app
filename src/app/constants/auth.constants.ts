@@ -24,8 +24,10 @@ const SPOTIFY_SCOPES = [
   Scope.USER_FOLLOW_READ,
 ];
 
-const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com';
+export const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com';
+
 export const SPOTIFY_AUTH_URL_TOKEN = `${SPOTIFY_AUTH_URL}/api/token`;
+
 export const SPOTIFY_AUTH_URL_LINK = `${SPOTIFY_AUTH_URL}/authorize?${new URLSearchParams(
   [
     ['response_type', 'code'],
@@ -34,6 +36,7 @@ export const SPOTIFY_AUTH_URL_LINK = `${SPOTIFY_AUTH_URL}/authorize?${new URLSea
     ['redirect_uri', environment.redirectUri],
   ]
 ).toString()}`;
+
 export const SPOTIFY_AUTH_URL_TOKEN_BODY = {
   headers: new HttpHeaders({
     'Content-Type': 'application/x-www-form-urlencoded',

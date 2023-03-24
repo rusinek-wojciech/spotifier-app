@@ -3,11 +3,11 @@
 }
 
 mat-drawer-container {
-  height: calc(100% - 64px);
+  min-height: calc(100% - 64px);
 }
 
 @media (max-width: 599px) {
   mat-drawer-container {
-    height: calc(100% - 56px);
+    min-height: calc(100% - 56px);
   }
 }

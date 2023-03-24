@@ -1,11 +1,3 @@
-.container {
-  height: calc(100% - 64px);
-  padding: 0;
-  overflow-y: auto;
-}
-
-@media (max-width: 599px) {
-  .container {
-    height: calc(100% - 56px);
-  }
+section {
+  margin: 1rem;
 }
