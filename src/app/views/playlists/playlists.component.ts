@@ -64,4 +64,8 @@ export class PlaylistsComponent {
   image(playlist: SpotifyApi.PlaylistObjectSimplified) {
     return playlist.images[0].url;
   }
+
+  handleClick(playlist: SpotifyApi.PlaylistObjectSimplified) {
+    console.log(playlist);
+  }
 }

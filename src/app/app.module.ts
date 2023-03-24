@@ -9,6 +9,7 @@ import { GeneratePlaylistComponent } from './views/generate-playlist/generate-pl
 import { UserAvatarComponent } from 'src/app/components/user-avatar/user-avatar.component';
 import { SettingsComponent } from './views/settings/settings.component';
 import { LayoutComponent } from './components/layout/layout.component';
+import { UnicodePipe } from './pipes/unicode.pipe';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { LayoutComponent } from './components/layout/layout.component';
     UserAvatarComponent,
     SettingsComponent,
     LayoutComponent,
+    UnicodePipe,
   ],
   imports: [SharedModule],
   providers: [AuthGuard],
