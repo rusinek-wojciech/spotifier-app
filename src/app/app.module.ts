@@ -10,6 +10,7 @@ import { UserAvatarComponent } from 'src/app/components/user-avatar/user-avatar.
 import { SettingsComponent } from './views/settings/settings.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { UnicodePipe } from './pipes/unicode.pipe';
+import { PlaylistComponent } from './views/playlist/playlist.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { UnicodePipe } from './pipes/unicode.pipe';
     SettingsComponent,
     LayoutComponent,
     UnicodePipe,
+    PlaylistComponent,
   ],
   imports: [SharedModule],
   providers: [AuthGuard],

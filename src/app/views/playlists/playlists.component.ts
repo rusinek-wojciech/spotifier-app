@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { SpotifyApi } from 'src/app/models';
 import { ApiService } from 'src/app/services/api.service';
 import { PaginationEvent } from 'src/app/shared/components/pagination/pagination.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Subject, take, takeUntil } from 'rxjs';
+import { Router } from '@angular/router';
+import { PATHS } from 'src/app/constants/paths.constants';
 
 const breakpointsToObserve = [
   Breakpoints.XSmall,
@@ -25,14 +28,16 @@ const breakpointToColumn = {
   templateUrl: './playlists.component.html',
   styleUrls: ['./playlists.component.scss'],
 })
-export class PlaylistsComponent {
+export class PlaylistsComponent implements OnDestroy {
+  private sub = new Subject<void>();
   length: number = 0;
   columns: number = 0;
   playlists: SpotifyApi.PlaylistObjectSimplified[] = [];
 
   constructor(
     private api: ApiService,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private router: Router
   ) {
     this.setBreakpointObserver();
   }
@@ -44,6 +49,7 @@ export class PlaylistsComponent {
   private setBreakpointObserver() {
     this.breakpointObserver
       .observe(breakpointsToObserve)
+      .pipe(takeUntil(this.sub))
       .subscribe(({ matches, breakpoints }) => {
         if (matches) {
           const [key] = Object.entries(breakpoints).find(([_, v]) => v)!;
@@ -55,6 +61,7 @@ export class PlaylistsComponent {
   private getPlaylistsWithPagination(event: PaginationEvent) {
     this.api
       .getListOfCurrentUserPlaylists$(event)
+      .pipe(take(1))
       .subscribe(({ items, total }) => {
         this.playlists = items;
         this.length = total;
@@ -66,6 +73,11 @@ export class PlaylistsComponent {
   }
 
   handleClick(playlist: SpotifyApi.PlaylistObjectSimplified) {
-    console.log(playlist);
+    this.router.navigate([PATHS.PLAYLIST, playlist.id]);
+  }
+
+  ngOnDestroy() {
+    this.sub.next();
+    this.sub.complete();
   }
 }
