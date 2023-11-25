@@ -26,6 +26,7 @@ export class PaginationComponent {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.length = event.length;
+    this.scrollToTop();
     this.emitChange();
   }
 
@@ -33,6 +34,14 @@ export class PaginationComponent {
     this.onChange.emit({
       limit: this.pageSize,
       offset: this.pageIndex * this.pageSize,
+    });
+  }
+
+  private scrollToTop() {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
     });
   }
 }

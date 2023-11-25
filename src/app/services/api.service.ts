@@ -448,7 +448,10 @@ export class ApiService {
     id: string,
     params?: { market?: string; fields?: string; additional_types?: string }
   ) {
-    return this.get$(`v1/playlists/${id}`, params);
+    return this.get$<SpotifyApi.PlaylistTrackResponse>(
+      `v1/playlists/${id}`,
+      params
+    );
   }
 
   changePlaylistDetails$(
@@ -473,7 +476,10 @@ export class ApiService {
       additional_types?: string;
     }
   ) {
-    return this.get$(`v1/playlists/${id}/tracks`, params);
+    return this.get$<SpotifyApi.PlaylistTrackResponse>(
+      `v1/playlists/${id}/tracks`,
+      params
+    );
   }
 
   addItemsToPlaylist$(

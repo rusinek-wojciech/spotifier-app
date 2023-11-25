@@ -1,1 +1,7 @@
-<p>playlist works!</p>
+<app-pagination [length]="total" (onChange)="handlePaginationChange($event)">
+  <mat-list role="list">
+    <mat-list-item *ngFor="let item of items">
+      {{ getAuthors(item) }} - {{ item.track?.name }}
+    </mat-list-item>
+  </mat-list>
+</app-pagination>

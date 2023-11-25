@@ -65,6 +65,7 @@ export class PlaylistsComponent implements OnDestroy {
       .subscribe(({ items, total }) => {
         this.playlists = items;
         this.length = total;
+        console.log(items);
       });
   }
 
