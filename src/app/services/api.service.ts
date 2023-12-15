@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
-import { SpotifyApi } from '../models';
+import { SpotifyApi, Token } from '../models';
+import { Observable, map, switchMap, tap, throwError } from 'rxjs';
 
 type Params =
   | HttpParams
@@ -21,40 +22,60 @@ export class ApiService {
 
   constructor(private http: HttpClient, private auth: AuthService) {}
 
-  private options(params?: Params) {
-    return {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${this.auth.token!.accessToken}`,
-        'Content-Type': 'application/json',
-      }),
-      params,
-    };
-  }
-
-  private get$<T = unknown>(uri: string, params?: Params) {
-    return this.http.get<T>(`${ApiService.ROOT}/${uri}`, this.options(params));
-  }
-
-  private put$<T = unknown>(uri: string, body: unknown, params?: Params) {
-    return this.http.put<T>(
-      `${ApiService.ROOT}/${uri}`,
-      body,
-      this.options(params)
+  private options$(params?: Params) {
+    return this.auth.token$.pipe(
+      map(token => {
+        if (!token) {
+          throw new Error('Token is missing');
+        }
+        return {
+          headers: new HttpHeaders({
+            Authorization: `Bearer ${token.accessToken}`,
+            'Content-Type': 'application/json',
+          }),
+          params,
+        };
+      })
     );
   }
 
-  private post$<T = unknown>(uri: string, body: unknown, params?: Params) {
-    return this.http.post<T>(
-      `${ApiService.ROOT}/${uri}`,
-      body,
-      this.options(params)
+  private get$<T = unknown>(uri: string, params?: Params): Observable<T> {
+    return this.options$(params).pipe(
+      switchMap(options =>
+        this.http.get<T>(`${ApiService.ROOT}/${uri}`, options)
+      )
     );
   }
 
-  private delete$<T = unknown>(uri: string, params?: Params) {
-    return this.http.delete<T>(
-      `${ApiService.ROOT}/${uri}`,
-      this.options(params)
+  private put$<T = unknown>(
+    uri: string,
+    body: unknown,
+    params?: Params
+  ): Observable<T> {
+    return this.options$(params).pipe(
+      switchMap(options =>
+        this.http.put<T>(`${ApiService.ROOT}/${uri}`, body, options)
+      )
+    );
+  }
+
+  private post$<T = unknown>(
+    uri: string,
+    body: unknown,
+    params?: Params
+  ): Observable<T> {
+    return this.options$(params).pipe(
+      switchMap(options =>
+        this.http.post<T>(`${ApiService.ROOT}/${uri}`, body, options)
+      )
+    );
+  }
+
+  private delete$<T = unknown>(uri: string, params?: Params): Observable<T> {
+    return this.options$(params).pipe(
+      switchMap(options =>
+        this.http.delete<T>(`${ApiService.ROOT}/${uri}`, options)
+      )
     );
   }
 
@@ -511,7 +532,7 @@ export class ApiService {
       snapshot_id?: string;
     }
   ) {
-    const options = this.options();
+    const options = this.options$();
     return this.delete$(`v1/playlists/${id}/tracks`, {
       // headers: options.headers,
       // body,

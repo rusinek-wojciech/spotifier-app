@@ -1,8 +1,16 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of, Subscription, throwError, timer } from 'rxjs';
-import { map, mergeMap, tap } from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  Observable,
+  of,
+  Subscription,
+  throwError,
+  timer,
+  zip,
+} from 'rxjs';
+import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import {
   SPOTIFY_AUTH_URL_TOKEN_BODY,
   SPOTIFY_AUTH_URL_TOKEN,
@@ -24,7 +32,9 @@ const TOKEN_KEY = 'token';
 })
 export class AuthService {
   private _timerSub: Subscription = new Subscription();
-  private _token: Token | null = null;
+  private _tokenSubject = new BehaviorSubject<Token | null>(null);
+
+  public token$: Observable<Token | null> = this._tokenSubject.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -37,28 +47,22 @@ export class AuthService {
       : this.removeToken();
   }
 
-  get token() {
-    return this._token;
-  }
-
-  authenticate$() {
-    return this.route.queryParams.pipe(
-      mergeMap(({ code, error, logout }: CallbackParams) => {
-        if (logout) {
-          this.removeToken();
+  public authenticate$() {
+    return zip(this.route.queryParams, this.token$).pipe(
+      switchMap(([params, token]: [CallbackParams, Token | null]) => {
+        if (params.logout) {
+          this.logout();
           return of(false);
         }
-        if (this.token) {
+        if (token) {
           return of(true);
         }
-        if (error) {
-          return throwError(() => new Error(error));
+        if (params.error) {
+          return throwError(() => new Error(params.error));
         }
-        if (code) {
-          return this.fetchToken$(code).pipe(
-            tap(token => {
-              this.setToken(token);
-            }),
+        if (params.code) {
+          return this.fetchToken$(params.code).pipe(
+            tap(token => this.setToken(token)),
             map(() => true)
           );
         }
@@ -81,13 +85,13 @@ export class AuthService {
   }
 
   private removeToken() {
-    this._token = null;
+    this._tokenSubject.next(null);
     localStorage.removeItem(TOKEN_KEY);
     this._timerSub.unsubscribe();
   }
 
   private setToken(token: Token) {
-    this._token = token;
+    this._tokenSubject.next(token);
     localStorage.setItem(TOKEN_KEY, JSON.stringify(token));
     this.setLogoutTimer(token);
   }
@@ -95,16 +99,18 @@ export class AuthService {
   private setLogoutTimer(token: Token) {
     this._timerSub.unsubscribe();
     const ms = token.validTo - Date.now();
-    this._timerSub = timer(ms).subscribe(() => {
-      this.removeToken();
-      if (location.pathname !== PATHS.LOGIN) {
-        this.router.navigate([PATHS.LOGIN]);
-      }
-    });
+    this._timerSub = timer(ms).subscribe(() => this.logout());
   }
 
   private getTokenFromStorage() {
     const token = localStorage.getItem(TOKEN_KEY);
     return token ? (JSON.parse(token) as Token) : null;
+  }
+
+  private logout() {
+    this.removeToken();
+    if (location.pathname !== PATHS.LOGIN) {
+      this.router.navigate([PATHS.LOGIN]);
+    }
   }
 }

@@ -5,7 +5,7 @@ import { SettingsComponent } from 'src/app/views/settings/settings.component';
 import { HomeComponent } from './views/home/home.component';
 import { LoginComponent } from './views/login/login.component';
 import { PlaylistsComponent } from './views/playlists/playlists.component';
-import { AuthGuard } from './guards/auth.guard';
+import { authGuard } from './guards/auth.guard';
 import { LayoutComponent } from 'src/app/components/layout/layout.component';
 import { PlaylistComponent } from 'src/app/views/playlist/playlist.component';
 
@@ -18,7 +18,7 @@ const routes: Routes = [
   {
     path: 'home',
     component: LayoutComponent,
-    canActivate: [AuthGuard],
+    canActivate: [authGuard],
     children: [
       {
         path: '',
