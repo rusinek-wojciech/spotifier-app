@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  handleClick() {
+  handleClick(): void {
     if (this.status === Status.LOGIN || this.status === Status.FAILURE) {
       window.location.href = SPOTIFY_AUTH_URL_LINK;
     }

@@ -25,16 +25,15 @@ type CallbackParams = {
   logout?: boolean;
 };
 
-const TOKEN_KEY = 'token';
+const TOKEN_STORAGE_KEY = 'token';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private _timerSub: Subscription = new Subscription();
-  private _tokenSubject = new BehaviorSubject<Token | null>(null);
-
-  public token$: Observable<Token | null> = this._tokenSubject.asObservable();
+  private logoutTimerSub: Subscription = new Subscription();
+  private tokenSubject = new BehaviorSubject<Token | null>(null);
+  public token$: Observable<Token | null> = this.tokenSubject.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -42,12 +41,14 @@ export class AuthService {
     private route: ActivatedRoute
   ) {
     const token = this.getTokenFromStorage();
-    token && Date.now() < token.validTo
-      ? this.setToken(token)
-      : this.removeToken();
+    if (token && Date.now() < token.validTo) {
+      this.setToken(token);
+    } else {
+      this.removeToken();
+    }
   }
 
-  public authenticate$() {
+  public authenticate$(): Observable<boolean> {
     return zip(this.route.queryParams, this.token$).pipe(
       switchMap(([params, token]: [CallbackParams, Token | null]) => {
         if (params.logout) {
@@ -85,26 +86,28 @@ export class AuthService {
   }
 
   private removeToken() {
-    this._tokenSubject.next(null);
-    localStorage.removeItem(TOKEN_KEY);
-    this._timerSub.unsubscribe();
+    this.tokenSubject.next(null);
+    localStorage.removeItem(TOKEN_STORAGE_KEY);
+    this.logoutTimerSub.unsubscribe();
   }
 
   private setToken(token: Token) {
-    this._tokenSubject.next(token);
-    localStorage.setItem(TOKEN_KEY, JSON.stringify(token));
+    this.tokenSubject.next(token);
+    localStorage.setItem(TOKEN_STORAGE_KEY, JSON.stringify(token));
     this.setLogoutTimer(token);
   }
 
   private setLogoutTimer(token: Token) {
-    this._timerSub.unsubscribe();
-    const ms = token.validTo - Date.now();
-    this._timerSub = timer(ms).subscribe(() => this.logout());
+    this.logoutTimerSub.unsubscribe();
+    const milisecondsToExpiration = token.validTo - Date.now();
+    this.logoutTimerSub = timer(milisecondsToExpiration).subscribe(() =>
+      this.logout()
+    );
   }
 
-  private getTokenFromStorage() {
-    const token = localStorage.getItem(TOKEN_KEY);
-    return token ? (JSON.parse(token) as Token) : null;
+  private getTokenFromStorage(): Token | null {
+    const token = localStorage.getItem(TOKEN_STORAGE_KEY);
+    return token ? JSON.parse(token) : null;
   }
 
   private logout() {

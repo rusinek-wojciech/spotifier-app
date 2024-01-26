@@ -1,43 +1,64 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { take } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SpotifyApi } from 'src/app/models';
 import { ApiService } from 'src/app/services/api.service';
 import { PaginationEvent } from 'src/app/shared/components/pagination/pagination.component';
+import { Subject, take, takeUntil } from 'rxjs';
+import { Router } from '@angular/router';
+import { PATHS } from 'src/app/constants/paths.constants';
+import { ObserverService } from 'src/app/services/observer.service';
 
 @Component({
   selector: 'app-playlist',
   templateUrl: './playlist.component.html',
   styleUrls: ['./playlist.component.scss'],
 })
-export class PlaylistComponent implements OnInit {
-  total: number = 0;
+export class PlaylistComponent implements OnInit, OnDestroy {
+  private sub = new Subject<void>();
+  length: number = 0;
   columns: number = 0;
-  items: SpotifyApi.PlaylistTrackObject[] = [];
+  playlists: SpotifyApi.PlaylistObjectSimplified[] = [];
 
-  private id!: string;
+  constructor(
+    private api: ApiService,
+    private observer: ObserverService,
+    private router: Router
+  ) {}
 
-  constructor(private api: ApiService, private route: ActivatedRoute) {}
-
-  handlePaginationChange(event: PaginationEvent) {
-    this.getPlaylistItemsWithPagination(event);
-  }
-
-  ngOnInit() {
-    this.id = this.route.snapshot.paramMap.get('id') as string;
-  }
-
-  private getPlaylistItemsWithPagination(event: PaginationEvent) {
-    this.api
-      .getPlaylistItems$(this.id, event)
-      .pipe(take(1))
-      .subscribe(({ items, total }) => {
-        this.items = items;
-        this.total = total;
+  ngOnInit(): void {
+    this.observer
+      .observe()
+      .pipe(takeUntil(this.sub))
+      .subscribe({
+        next: columns => {
+          this.columns = columns;
+        },
       });
   }
 
-  getAuthors(item: SpotifyApi.PlaylistTrackObject) {
-    return item.track?.artists.map(artist => artist.name).join(' & ');
+  handlePaginationChange(event: PaginationEvent) {
+    this.getPlaylistsWithPagination(event);
+  }
+
+  private getPlaylistsWithPagination(event: PaginationEvent) {
+    this.api
+      .getListOfCurrentUserPlaylists$(event)
+      .pipe(take(1))
+      .subscribe(({ items, total }) => {
+        this.playlists = items;
+        this.length = total;
+      });
+  }
+
+  image(playlist: SpotifyApi.PlaylistObjectSimplified): string {
+    return playlist.images[0].url;
+  }
+
+  handleClick(playlist: SpotifyApi.PlaylistObjectSimplified): void {
+    this.router.navigate([PATHS.PLAYLIST, playlist.id]);
+  }
+
+  ngOnDestroy() {
+    this.sub.next();
+    this.sub.complete();
   }
 }

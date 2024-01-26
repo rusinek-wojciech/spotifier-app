@@ -1,7 +1,7 @@
-<app-pagination [length]="total" (onChange)="handlePaginationChange($event)">
-  <mat-list role="list">
-    <mat-list-item *ngFor="let item of items">
-      {{ getAuthors(item) }} - {{ item.track?.name }}
-    </mat-list-item>
-  </mat-list>
+<app-pagination [length]="length" (onChange)="handlePaginationChange($event)">
+  <mat-grid-list [cols]="columns" gutterSize="1rem" rowHeight="4:5">
+    <mat-grid-tile *ngFor="let playlist of playlists">
+      <app-playlist-card [playlist]="playlist"></app-playlist-card>
+    </mat-grid-tile>
+  </mat-grid-list>
 </app-pagination>

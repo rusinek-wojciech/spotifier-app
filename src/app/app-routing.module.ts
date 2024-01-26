@@ -4,10 +4,10 @@ import { GeneratePlaylistComponent } from 'src/app/views/generate-playlist/gener
 import { SettingsComponent } from 'src/app/views/settings/settings.component';
 import { HomeComponent } from './views/home/home.component';
 import { LoginComponent } from './views/login/login.component';
-import { PlaylistsComponent } from './views/playlists/playlists.component';
+import { PlaylistComponent } from './views/playlist/playlist.component';
 import { authGuard } from './guards/auth.guard';
 import { LayoutComponent } from 'src/app/components/layout/layout.component';
-import { PlaylistComponent } from 'src/app/views/playlist/playlist.component';
+import { TracklistComponent } from 'src/app/views/tracklist/tracklist.component';
 
 const routes: Routes = [
   {
@@ -26,11 +26,11 @@ const routes: Routes = [
       },
       {
         path: 'playlists',
-        component: PlaylistsComponent,
+        component: PlaylistComponent,
       },
       {
         path: 'playlist/:id',
-        component: PlaylistComponent,
+        component: TracklistComponent,
       },
       {
         path: 'generate-playlist',

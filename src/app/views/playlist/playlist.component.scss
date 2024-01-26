@@ -1,0 +1,9 @@
+mat-grid-tile {
+  transition: all 250ms;
+  transition-delay: 100ms;
+
+  &:hover {
+    filter: brightness(90%);
+    transform: scale(105%);
+  }
+}
