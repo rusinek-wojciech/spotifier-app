@@ -7,23 +7,22 @@ function secrets() {
   });
 
   const targetPath = './src/environments/environment.ts';
-  const envConfigFile = `export const environment = {
-    version: '${version}',
-    production: false,
-    redirectUri: '${process.env['REDIRECT_URI']}',
-    clientId: '${process.env['CLIENT_ID']}',
-    clientSecret: '${process.env['CLIENT_SECRET']}',
-  };
-  `;
-  console.log(colors.magenta('The file `environment.ts` will be written'));
+  const envConfigFile = 
+`export const environment = {
+  version: '${version}',
+  production: false,
+  redirectUri: '${process.env['REDIRECT_URI']}',
+  clientId: '${process.env['CLIENT_ID']}',
+  clientSecret: '${process.env['CLIENT_SECRET']}',
+};`;
   fs.writeFile(targetPath, envConfigFile, err => {
     if (err) {
       console.error(err);
       throw err;
     }
     console.log(
-      colors.magenta(
-        `Angular environment.ts file generated correctly at ${targetPath} \n`
+      colors.green(
+        `Angular env file generated correctly at ${targetPath} \n`
       )
     );
   });

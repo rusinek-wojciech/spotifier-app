@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "npm run secrets && ng serve",
+    "start": "ng serve",
     "build": "npm run secrets && ng build",
-    "watch": "npm run secrets && ng build --watch --configuration development",
+    "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "secrets": "node script/secrets.js"
   },
@@ -21,25 +21,25 @@
     "@angular/platform-browser": "^17.1.1",
     "@angular/platform-browser-dynamic": "^17.1.1",
     "@angular/router": "^17.1.1",
-    "rxjs": "~7.8.0",
-    "tslib": "^2.3.0",
+    "rxjs": "~7.8.1",
+    "tslib": "~2.6.2",
     "zone.js": "~0.14.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.1.1",
-    "@angular/cli": "~17.1.1",
+    "@angular/cli": "^17.1.1",
     "@angular/compiler-cli": "^17.1.1",
     "@types/jasmine": "~4.3.0",
-    "@types/node": "^18.14.1",
-    "colors": "^1.4.0",
-    "dotenv": "^16.0.3",
+    "@types/node": "~20.11.9",
+    "colors": "~1.4.0",
+    "dotenv": "~16.4.1",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
-    "prettier": "^2.8.4",
+    "prettier": "~3.2.4",
     "typescript": "~5.3.3"
   }
 }
