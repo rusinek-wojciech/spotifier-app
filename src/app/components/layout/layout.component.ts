@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { ApiService } from 'src/app/services/api.service';
 import { shareReplay } from 'rxjs';
 import { PATHS } from 'src/app/constants/paths.constants';
+import { SpotifyService } from 'src/app/services/spotify.service';
 
 @Component({
   selector: 'app-layout',
@@ -11,7 +11,7 @@ import { PATHS } from 'src/app/constants/paths.constants';
 export class LayoutComponent {
   readonly PATHS = PATHS;
 
-  user$ = this.apiService.getCurrentUserProfile$().pipe(shareReplay(1));
+  user$ = this.spotifyService.getCurrentUserProfile$().pipe(shareReplay(1));
 
-  constructor(private apiService: ApiService) {}
+  constructor(private spotifyService: SpotifyService) {}
 }

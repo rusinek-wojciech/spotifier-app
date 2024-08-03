@@ -10,7 +10,7 @@ import {
   timer,
   zip,
 } from 'rxjs';
-import { map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import {
   SPOTIFY_AUTH_URL_TOKEN_BODY,
   SPOTIFY_AUTH_URL_TOKEN,
@@ -27,9 +27,7 @@ type CallbackParams = {
 
 const TOKEN_STORAGE_KEY = 'token';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class AuthService {
   private logoutTimerSub: Subscription = new Subscription();
   private tokenSubject = new BehaviorSubject<Token | null>(null);

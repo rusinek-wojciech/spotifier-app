@@ -12,6 +12,10 @@ import { UnicodePipe } from './pipes/unicode.pipe';
 import { TracklistComponent } from './views/tracklist/tracklist.component';
 import { PlaylistCardComponent } from 'src/app/views/playlist-card/playlist-card.component';
 import { TrackComponent } from 'src/app/views/track/track.component';
+import { ObserverService } from 'src/app/services/observer.service';
+import { ApiService } from 'src/app/services/api.service';
+import { SpotifyService } from 'src/app/services/spotify.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @NgModule({
   declarations: [
@@ -30,5 +34,6 @@ import { TrackComponent } from 'src/app/views/track/track.component';
   ],
   imports: [SharedModule],
   bootstrap: [AppComponent],
+  providers: [AuthService, ObserverService, ApiService, SpotifyService],
 })
 export class AppModule {}

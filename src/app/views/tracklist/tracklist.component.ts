@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { take } from 'rxjs';
 import { SpotifyApi } from 'src/app/models';
-import { ApiService } from 'src/app/services/api.service';
+import { SpotifyService } from 'src/app/services/spotify.service';
 import { PaginationEvent } from 'src/app/shared/components/pagination/pagination.component';
 
 @Component({
@@ -17,7 +17,10 @@ export class TracklistComponent implements OnInit {
 
   private id!: string;
 
-  constructor(private api: ApiService, private route: ActivatedRoute) {}
+  constructor(
+    private spotifyService: SpotifyService,
+    private route: ActivatedRoute
+  ) {}
 
   handlePaginationChange(event: PaginationEvent) {
     this.getPlaylistItemsWithPagination(event);
@@ -28,7 +31,7 @@ export class TracklistComponent implements OnInit {
   }
 
   private getPlaylistItemsWithPagination(event: PaginationEvent) {
-    this.api
+    this.spotifyService
       .getPlaylistItems$(this.id, event)
       .pipe(take(1))
       .subscribe(({ items, total }) => {

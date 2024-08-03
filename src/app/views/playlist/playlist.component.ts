@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SpotifyApi } from 'src/app/models';
-import { ApiService } from 'src/app/services/api.service';
 import { PaginationEvent } from 'src/app/shared/components/pagination/pagination.component';
 import { Subject, take, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { PATHS } from 'src/app/constants/paths.constants';
 import { ObserverService } from 'src/app/services/observer.service';
+import { SpotifyService } from 'src/app/services/spotify.service';
 
 @Component({
   selector: 'app-playlist',
@@ -19,7 +19,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   playlists: SpotifyApi.PlaylistObjectSimplified[] = [];
 
   constructor(
-    private api: ApiService,
+    private spotifyService: SpotifyService,
     private observer: ObserverService,
     private router: Router
   ) {}
@@ -40,7 +40,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   }
 
   private getPlaylistsWithPagination(event: PaginationEvent) {
-    this.api
+    this.spotifyService
       .getListOfCurrentUserPlaylists$(event)
       .pipe(take(1))
       .subscribe(({ items, total }) => {
