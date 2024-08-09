@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
@@ -9,7 +10,7 @@ import { PATHS } from 'src/app/shared/constants/paths.constants';
   templateUrl: './user-avatar.component.html',
   styleUrls: ['./user-avatar.component.scss'],
   standalone: true,
-  imports: [RouterModule, MatMenuModule, MatIconModule],
+  imports: [RouterModule, MatMenuModule, MatIconModule, MatButtonModule],
 })
 export class UserAvatarComponent {
   readonly PATHS = PATHS;
