@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 export interface PaginationEvent {
   limit: number;
@@ -10,6 +10,8 @@ export interface PaginationEvent {
   selector: 'app-pagination[length]',
   templateUrl: './pagination.component.html',
   styleUrls: ['./pagination.component.scss'],
+  standalone: true,
+  imports: [MatPaginatorModule],
 })
 export class PaginationComponent {
   pageIndex = 0;

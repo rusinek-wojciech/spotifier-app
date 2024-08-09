@@ -1,16 +1,22 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SpotifyApi } from 'src/app/models';
-import { PaginationEvent } from 'src/app/shared/components/pagination/pagination.component';
 import { Subject, take, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
-import { PATHS } from 'src/app/constants/paths.constants';
-import { ObserverService } from 'src/app/services/observer.service';
-import { SpotifyService } from 'src/app/services/spotify.service';
+import { MatGridListModule } from '@angular/material/grid-list';
+
+import {
+  PaginationComponent,
+  PaginationEvent,
+} from 'src/app/shared/components/pagination/pagination.component';
+import { ObserverService, SpotifyService } from 'src/app/shared/services';
+import { PATHS } from 'src/app/shared/constants';
+import { PlaylistCardComponent } from 'src/app/views/playlist-card/playlist-card.component';
 
 @Component({
   selector: 'app-playlist',
   templateUrl: './playlist.component.html',
   styleUrls: ['./playlist.component.scss'],
+  standalone: true,
+  imports: [PaginationComponent, PlaylistCardComponent, MatGridListModule],
 })
 export class PlaylistComponent implements OnInit, OnDestroy {
   private sub = new Subject<void>();

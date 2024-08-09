@@ -1,7 +1,9 @@
 <app-pagination [length]="total" (onChange)="handlePaginationChange($event)">
   <mat-list role="list">
-    <mat-list-item *ngFor="let item of items">
-      <app-track [track]="item"></app-track>
-    </mat-list-item>
+    @for (item of items; track item) {
+      <mat-list-item>
+        <app-track [track]="item"></app-track>
+      </mat-list-item>
+    }
   </mat-list>
 </app-pagination>

@@ -1,10 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { SpotifyApi } from 'src/app/models';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-track',
   templateUrl: './track.component.html',
   styleUrls: ['./track.component.scss'],
+  standalone: true,
+  imports: [MatCardModule],
 })
 export class TrackComponent {
   @Input() track!: SpotifyApi.PlaylistTrackObject;

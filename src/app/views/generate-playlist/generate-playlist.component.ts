@@ -1,16 +1,22 @@
 import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { ApiService } from 'src/app/services/api.service';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+
+import { ApiService } from 'src/app/shared/services';
 
 @Component({
   selector: 'app-generate-playlist',
   templateUrl: './generate-playlist.component.html',
   styleUrls: ['./generate-playlist.component.scss'],
+  standalone: true,
+  imports: [ReactiveFormsModule],
 })
 export class GeneratePlaylistComponent {
   form;
 
-  constructor(private api: ApiService, private formBuilder: FormBuilder) {
+  constructor(
+    private api: ApiService,
+    private formBuilder: FormBuilder
+  ) {
     this.form = this.formBuilder.group({
       acousticness: 0,
       energy: 0,

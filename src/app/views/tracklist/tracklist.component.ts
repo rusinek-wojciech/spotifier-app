@@ -1,14 +1,21 @@
 import { Component, OnInit } from '@angular/core';
+import { MatListModule } from '@angular/material/list';
 import { ActivatedRoute } from '@angular/router';
 import { take } from 'rxjs';
-import { SpotifyApi } from 'src/app/models';
-import { SpotifyService } from 'src/app/services/spotify.service';
-import { PaginationEvent } from 'src/app/shared/components/pagination/pagination.component';
+import {
+  PaginationComponent,
+  PaginationEvent,
+} from 'src/app/shared/components/pagination/pagination.component';
+import { SpotifyService } from 'src/app/shared/services';
+
+import { TrackComponent } from 'src/app/views/track/track.component';
 
 @Component({
   selector: 'app-tracklist',
   templateUrl: './tracklist.component.html',
   styleUrls: ['./tracklist.component.scss'],
+  standalone: true,
+  imports: [PaginationComponent, TrackComponent, MatListModule],
 })
 export class TracklistComponent implements OnInit {
   total: number = 0;
