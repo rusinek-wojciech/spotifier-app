@@ -17,12 +17,14 @@ describe('ObserverService', () => {
 
   let service: ObserverService;
   let breakpointObserverMock: {
-    observe: Mock<Observable<BreakpointState>>;
+    observe: jest.Mock<Observable<BreakpointState>>;
   };
 
   beforeEach(() => {
     breakpointObserverMock = {
-      observe: fn(() => of({ matches: true, breakpoints: breakpointsMock })),
+      observe: jest.fn(() =>
+        of({ matches: true, breakpoints: breakpointsMock })
+      ),
     };
 
     TestBed.configureTestingModule({

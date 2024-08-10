@@ -7,8 +7,7 @@ function secrets() {
   });
 
   const targetPath = './src/environments/environment.ts';
-  const envConfigFile = 
-`export const environment = {
+  const envConfigFile = `export const environment = {
   version: '${version}',
   production: false,
   redirectUri: '${process.env['REDIRECT_URI']}',
@@ -21,9 +20,7 @@ function secrets() {
       throw err;
     }
     console.log(
-      colors.green(
-        `Angular env file generated correctly at ${targetPath} \n`
-      )
+      colors.green(`Angular env file generated correctly at ${targetPath} \n`)
     );
   });
 }

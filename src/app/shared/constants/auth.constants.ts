@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { Scope } from 'src/app/shared/types';
+import { Scope } from '@app/shared/types';
 import { environment } from 'src/environments/environment';
 
 const SPOTIFY_SCOPES = [
