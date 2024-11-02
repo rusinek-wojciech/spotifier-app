@@ -5,6 +5,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
 
 import { PATHS } from '@app/shared/constants';
+import { AuthService } from '@app/shared/services';
 
 @Component({
   selector: 'app-user-avatar',
@@ -19,10 +20,14 @@ export class UserAvatarComponent {
 
   @Input({ required: true }) user!: SpotifyApi.CurrentUsersProfileResponse;
 
-  constructor() {}
+  constructor(private auth: AuthService) {}
 
   get avatarImage(): string {
     const avatar = this.user.images?.[0]?.url ?? this.AVATAR;
     return `url(${avatar})`;
+  }
+
+  handleLogout(): void {
+    this.auth.removeToken();
   }
 }

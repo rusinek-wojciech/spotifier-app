@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { ActivatedRoute } from '@angular/router';
 import { take } from 'rxjs';
+
 import {
   PaginationComponent,
   PaginationEvent,
-} from 'src/app/shared/components/pagination/pagination.component';
-import { SpotifyService } from 'src/app/shared/services';
-
-import { TrackComponent } from 'src/app/views/track/track.component';
+} from '@app/shared/components/pagination/pagination.component';
+import { SpotifyApiHttpService } from '@app/shared/services';
+import { TrackComponent } from '@app/views/track/track.component';
 
 @Component({
   selector: 'app-tracklist',
@@ -25,7 +25,7 @@ export class TracklistComponent implements OnInit {
   private id!: string;
 
   constructor(
-    private spotifyService: SpotifyService,
+    private spotifyApiHttpService: SpotifyApiHttpService,
     private route: ActivatedRoute
   ) {}
 
@@ -38,8 +38,8 @@ export class TracklistComponent implements OnInit {
   }
 
   private getPlaylistItemsWithPagination(event: PaginationEvent) {
-    this.spotifyService
-      .getPlaylistItems$(this.id, event)
+    this.spotifyApiHttpService
+      .getPlaylistItems(this.id, event)
       .pipe(take(1))
       .subscribe(({ items, total }) => {
         this.items = items;

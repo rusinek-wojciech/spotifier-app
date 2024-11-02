@@ -3,18 +3,18 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { Router } from '@angular/router';
 
-import { PATHS, SPOTIFY_AUTH_URL_LINK } from 'src/app/shared/constants';
-import { AuthService } from 'src/app/shared/services';
+import { PATHS } from '@app/shared/constants';
+import { AuthService, SpotifyAuthHttpService } from '@app/shared/services';
 
 enum Status {
-  LOGIN = 'login',
+  MISSING = 'missing',
   PENDING = 'pending',
   SUCCESS = 'success',
   FAILURE = 'failure',
 }
 
 const messageByStatus = {
-  [Status.LOGIN]: 'Waiting for user permission',
+  [Status.MISSING]: 'Waiting for user permission',
   [Status.PENDING]: 'Please wait...',
   [Status.SUCCESS]: 'You will be soon redirected',
   [Status.FAILURE]: 'Failed to gain spotify permissions. Press to try again',
@@ -28,6 +28,7 @@ const messageByStatus = {
   imports: [CommonModule, MatCardModule],
 })
 export class LoginComponent implements OnInit, OnDestroy {
+  private readonly redirectionDelay = 1000;
   readonly Status = Status;
   readonly messageByStatus = messageByStatus;
 
@@ -36,25 +37,30 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   constructor(
     private auth: AuthService,
+    private spotifyAuthHttpService: SpotifyAuthHttpService,
     private router: Router
   ) {}
 
   ngOnInit() {
-    this.auth.authenticate$().subscribe({
-      next: success => {
-        if (success) {
+    this.auth.authorize().subscribe({
+      next: token => {
+        console.log('authorize', token);
+        if (token) {
           this.status = Status.SUCCESS;
+          this.auth.updateToken(token);
           this.timeoutId = setTimeout(
             () => this.router.navigate([PATHS.HOME]),
-            300
+            this.redirectionDelay
           );
-        } else {
-          this.status = Status.LOGIN;
+          return;
         }
+        this.auth.removeToken();
+        this.status = Status.MISSING;
       },
       error: error => {
         this.status = Status.FAILURE;
         console.error(error);
+        this.auth.removeToken();
       },
     });
   }
@@ -64,8 +70,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   handleClick(): void {
-    if (this.status === Status.LOGIN || this.status === Status.FAILURE) {
-      window.location.href = SPOTIFY_AUTH_URL_LINK;
+    if (this.status === Status.MISSING || this.status === Status.FAILURE) {
+      this.spotifyAuthHttpService.authorization();
     }
   }
 }

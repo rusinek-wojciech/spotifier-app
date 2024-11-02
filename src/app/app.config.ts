@@ -9,7 +9,8 @@ import { TracklistComponent } from './views/tracklist/tracklist.component';
 import { GeneratePlaylistComponent } from './views/generate-playlist/generate-playlist.component';
 import { SettingsComponent } from './core/components/settings/settings.component';
 import { LoginComponent } from './core/components/login/login.component';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { globalInterceptor } from '@app/shared/interceptors/global.interceptor';
 
 const routes: Routes = [
   {
@@ -60,6 +61,6 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAnimations(),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([globalInterceptor])),
   ],
 };

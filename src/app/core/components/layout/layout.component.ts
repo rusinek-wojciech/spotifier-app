@@ -7,10 +7,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { shareReplay } from 'rxjs';
-import { UserAvatarComponent } from 'src/app/shared/components/user-avatar/user-avatar.component';
 
-import { PATHS } from 'src/app/shared/constants';
-import { SpotifyService } from 'src/app/shared/services';
+import { UserAvatarComponent } from '@app/shared/components/user-avatar/user-avatar.component';
+import { PATHS } from '@app/shared/constants';
+import { SpotifyApiHttpService } from '@app/shared/services';
 
 @Component({
   selector: 'app-layout',
@@ -31,7 +31,9 @@ import { SpotifyService } from 'src/app/shared/services';
 export class LayoutComponent {
   readonly PATHS = PATHS;
 
-  user$ = this.spotifyService.getCurrentUserProfile$().pipe(shareReplay(1));
+  user$ = this.spotifyApiHttpService
+    .getCurrentUserProfile()
+    .pipe(shareReplay(1));
 
-  constructor(private spotifyService: SpotifyService) {}
+  constructor(private spotifyApiHttpService: SpotifyApiHttpService) {}
 }

@@ -6,10 +6,10 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import {
   PaginationComponent,
   PaginationEvent,
-} from 'src/app/shared/components/pagination/pagination.component';
-import { ObserverService, SpotifyService } from 'src/app/shared/services';
-import { PATHS } from 'src/app/shared/constants';
-import { PlaylistCardComponent } from 'src/app/views/playlist-card/playlist-card.component';
+} from '@app/shared/components/pagination/pagination.component';
+import { ObserverService, SpotifyApiHttpService } from '@app/shared/services';
+import { PATHS } from '@app/shared/constants';
+import { PlaylistCardComponent } from '@app/views/playlist-card/playlist-card.component';
 
 @Component({
   selector: 'app-playlist',
@@ -25,7 +25,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   playlists: SpotifyApi.PlaylistObjectSimplified[] = [];
 
   constructor(
-    private spotifyService: SpotifyService,
+    private spotifyApiHttpService: SpotifyApiHttpService,
     private observer: ObserverService,
     private router: Router
   ) {}
@@ -46,8 +46,8 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   }
 
   private getPlaylistsWithPagination(event: PaginationEvent) {
-    this.spotifyService
-      .getListOfCurrentUserPlaylists$(event)
+    this.spotifyApiHttpService
+      .getListOfCurrentUserPlaylists(event)
       .pipe(take(1))
       .subscribe(({ items, total }) => {
         this.playlists = items;

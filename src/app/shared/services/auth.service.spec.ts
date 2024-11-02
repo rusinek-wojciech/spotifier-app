@@ -36,7 +36,7 @@ describe('AuthService', () => {
   });
 
   it('should not authenticate', done => {
-    service.authenticate$().subscribe(result => {
+    service.authenticate().subscribe(result => {
       expect(result).toBe(false);
       done();
     });

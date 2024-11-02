@@ -8,10 +8,7 @@
     <mat-icon>settings</mat-icon>
     <span>Settings</span>
   </button>
-  <button
-    mat-menu-item
-    [routerLink]="PATHS.LOGIN"
-    [queryParams]="{ logout: true }">
+  <button mat-menu-item [routerLink]="PATHS.LOGIN" (click)="handleLogout()">
     <mat-icon>logout</mat-icon>
     <span>Logout</span>
   </button>

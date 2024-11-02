@@ -1,3 +1,2 @@
-export * from './token.class';
-export * from './token-response.interface';
+export * from './auth.type';
 export * from './scope.enum';
