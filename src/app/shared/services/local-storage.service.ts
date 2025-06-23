@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { LoggerService } from '@app/shared/services';
 import { Token } from '@app/shared/types';
 
 type LocalStorageEntry = {
@@ -6,10 +7,10 @@ type LocalStorageEntry = {
   value: Token;
 };
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class LocalStorageService {
+  private readonly logger = inject(LoggerService);
+
   setItem<K extends LocalStorageEntry['key']>(
     key: K,
     value: Extract<LocalStorageEntry, { key: K }>['value']
@@ -17,7 +18,7 @@ export class LocalStorageService {
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      console.error(`Error saving to localStorage with key ${key}:`, error);
+      this.logger.error(`Error saving to localStorage with key ${key}:`, error);
     }
   }
 
@@ -26,10 +27,12 @@ export class LocalStorageService {
   ): Extract<LocalStorageEntry, { key: K }>['value'] | undefined {
     try {
       const jsonValue = localStorage.getItem(key);
-      if (jsonValue === null) return undefined;
+      if (jsonValue === null) {
+        return undefined;
+      }
       return JSON.parse(jsonValue);
     } catch (error) {
-      console.error(
+      this.logger.error(
         `Error retrieving from localStorage with key ${key}:`,
         error
       );
@@ -41,7 +44,10 @@ export class LocalStorageService {
     try {
       localStorage.removeItem(key);
     } catch (error) {
-      console.error(`Error removing from localStorage with key ${key}:`, error);
+      this.logger.error(
+        `Error removing from localStorage with key ${key}:`,
+        error
+      );
     }
   }
 
@@ -49,7 +55,7 @@ export class LocalStorageService {
     try {
       localStorage.clear();
     } catch (error) {
-      console.error(`Error clearing localStorage:`, error);
+      this.logger.error(`Error clearing localStorage:`, error);
     }
   }
 

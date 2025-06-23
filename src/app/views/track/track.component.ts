@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 
 @Component({
@@ -9,13 +9,11 @@ import { MatCardModule } from '@angular/material/card';
   imports: [MatCardModule],
 })
 export class TrackComponent {
-  @Input() track!: SpotifyApi.PlaylistTrackObject;
-
-  getAuthors(item: SpotifyApi.PlaylistTrackObject) {
-    return item.track?.artists.map(artist => artist.name).join(' & ');
-  }
-
-  image(item: SpotifyApi.PlaylistTrackObject): string {
-    return item.track?.album.images[2].url!;
-  }
+  readonly track = input.required<SpotifyApi.PlaylistTrackObject>();
+  readonly image = computed(() => this.track().track?.album.images[2].url!);
+  readonly authors = computed(() =>
+    this.track()
+      .track?.artists.map(artist => artist.name)
+      .join(' & ')
+  );
 }

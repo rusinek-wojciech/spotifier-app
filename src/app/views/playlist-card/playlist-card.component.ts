@@ -1,4 +1,11 @@
-import { Component, Input } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  Input,
+  untracked,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 
@@ -13,15 +20,11 @@ import { UnicodePipe } from 'src/app/shared/pipes';
   imports: [MatCardModule, UnicodePipe],
 })
 export class PlaylistCardComponent {
-  @Input() playlist!: SpotifyApi.PlaylistObjectSimplified;
+  private readonly router = inject(Router);
+  readonly playlist = input.required<SpotifyApi.PlaylistObjectSimplified>();
+  readonly image = computed(() => this.playlist().images[0].url);
 
-  constructor(private router: Router) {}
-
-  image(playlist: SpotifyApi.PlaylistObjectSimplified): string {
-    return playlist.images[0].url;
-  }
-
-  handleClick(playlist: SpotifyApi.PlaylistObjectSimplified): void {
-    this.router.navigate([PATHS.PLAYLIST, playlist.id]);
+  public handleClick(): void {
+    this.router.navigate([PATHS.PLAYLIST, untracked(this.playlist).id]);
   }
 }

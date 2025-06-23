@@ -1,28 +1,29 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Observable, of, throwError, timer } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 import {
   LocalStorageService,
   SpotifyAuthHttpService,
 } from '@app/shared/services';
 import { AuthorizationResponseParams, Token } from '@app/shared/types';
+import { LoggerService } from '@app/shared/services/logger.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class AuthService {
+  private readonly logger = inject(LoggerService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly spotifyAuthHttpService = inject(SpotifyAuthHttpService);
+  private readonly localStorageService = inject(LocalStorageService);
+
   private readonly tokenSubject = new BehaviorSubject<Token | undefined>(
     undefined
   );
+
   readonly token$ = this.tokenSubject.asObservable();
 
-  constructor(
-    private route: ActivatedRoute,
-    private spotifyAuthHttpService: SpotifyAuthHttpService,
-    private localStorageService: LocalStorageService
-  ) {
+  constructor() {
     this.localStorageTokenListener();
   }
 
@@ -67,7 +68,7 @@ export class AuthService {
   }
 
   initToken(): void {
-    console.log('initToken');
+    this.logger.log('initToken');
     const token = this.localStorageService.getItem('token');
     token && !this.isExpired(token)
       ? this.updateToken(token)
@@ -75,13 +76,13 @@ export class AuthService {
   }
 
   removeToken(): void {
-    console.log('removeToken');
+    this.logger.log('removeToken');
     this.localStorageService.removeItem('token');
     this.tokenSubject.next(undefined);
   }
 
   updateToken(token: Token): void {
-    console.log('updateToken');
+    this.logger.log('updateToken');
     this.localStorageService.setItem('token', token);
     this.tokenSubject.next(token);
   }

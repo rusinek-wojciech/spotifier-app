@@ -1,6 +1,6 @@
 <div class="avatarButton mat-elevation-z3" matRipple [matMenuTriggerFor]="menu">
-  <button mat-mini-fab [style.backgroundImage]="avatarImage"></button>
-  <p class="mat-small">{{ user.display_name }}</p>
+  <button mat-mini-fab [style.backgroundImage]="avatarImage()"></button>
+  <p class="mat-small">{{ user().display_name }}</p>
 </div>
 
 <mat-menu #menu>

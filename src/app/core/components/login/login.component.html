@@ -11,15 +11,15 @@
         matRipple
         class="status-wrapper mat-display-1"
         [ngClass]="{
-          login: status === Status.MISSING,
-          pending: status === Status.PENDING,
-          success: status === Status.SUCCESS,
-          failure: status === Status.FAILURE,
+          login: status() === Status.MISSING,
+          pending: status() === Status.PENDING,
+          success: status() === Status.SUCCESS,
+          failure: status() === Status.FAILURE,
         }">
-        {{ status }}
+        {{ status() }}
       </div>
       <div class="details-wrapper">
-        <p>{{ messageByStatus[status] }}</p>
+        <p>{{ messageByStatus[status()] }}</p>
       </div>
     </mat-card-content>
   </mat-card>

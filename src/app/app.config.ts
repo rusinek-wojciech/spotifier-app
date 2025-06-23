@@ -11,6 +11,14 @@ import { SettingsComponent } from './core/components/settings/settings.component
 import { LoginComponent } from './core/components/login/login.component';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { globalInterceptor } from '@app/shared/interceptors/global.interceptor';
+import {
+  AuthService,
+  LocalStorageService,
+  LoggerService,
+  ObserverService,
+  SpotifyApiHttpService,
+  SpotifyAuthHttpService,
+} from '@app/shared/services';
 
 const routes: Routes = [
   {
@@ -62,5 +70,11 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
     provideHttpClient(withInterceptors([globalInterceptor])),
+    LocalStorageService,
+    LoggerService,
+    AuthService,
+    ObserverService,
+    SpotifyApiHttpService,
+    SpotifyAuthHttpService,
   ],
 };

@@ -1,6 +1,6 @@
-<app-pagination [length]="total" (onChange)="handlePaginationChange($event)">
+<app-pagination [length]="total()" (onChange)="handlePaginationChange($event)">
   <mat-list role="list">
-    @for (item of items; track item) {
+    @for (item of items(); track item) {
       <mat-list-item>
         <app-track [track]="item"></app-track>
       </mat-list-item>

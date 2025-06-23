@@ -10,9 +10,7 @@ import { RefreshTokenResponse, Token, TokenResponse } from '@app/shared/types';
 import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class SpotifyAuthHttpService {
   private readonly root = 'https://accounts.spotify.com';
   private readonly httpBackend = inject(HttpBackend);

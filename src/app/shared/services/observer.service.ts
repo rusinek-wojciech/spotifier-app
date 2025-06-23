@@ -3,15 +3,15 @@ import {
   BreakpointState,
   Breakpoints,
 } from '@angular/cdk/layout';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable, filter, map } from 'rxjs';
 
 type BreakpointsType = BreakpointState['breakpoints'];
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ObserverService {
+  private readonly breakpointObserver = inject(BreakpointObserver);
+
   private readonly breakpointsToObserve = [
     Breakpoints.XSmall,
     Breakpoints.Small,
@@ -27,8 +27,6 @@ export class ObserverService {
     [Breakpoints.Large]: 6,
     [Breakpoints.XLarge]: 8,
   };
-
-  constructor(private breakpointObserver: BreakpointObserver) {}
 
   public observe(
     options = {

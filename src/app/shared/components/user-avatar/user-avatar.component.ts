@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -15,19 +15,16 @@ import { AuthService } from '@app/shared/services';
   imports: [RouterModule, MatMenuModule, MatIconModule, MatButtonModule],
 })
 export class UserAvatarComponent {
-  readonly PATHS = PATHS;
+  private readonly auth = inject(AuthService);
   private readonly AVATAR = 'assets/images/avatar.png';
 
-  @Input({ required: true }) user!: SpotifyApi.CurrentUsersProfileResponse;
+  readonly PATHS = PATHS;
+  readonly user = input.required<SpotifyApi.CurrentUsersProfileResponse>();
+  readonly avatarImage = computed(
+    () => `url(${this.user().images?.[0]?.url ?? this.AVATAR})`
+  );
 
-  constructor(private auth: AuthService) {}
-
-  get avatarImage(): string {
-    const avatar = this.user.images?.[0]?.url ?? this.AVATAR;
-    return `url(${avatar})`;
-  }
-
-  handleLogout(): void {
+  protected handleLogout(): void {
     this.auth.removeToken();
   }
 }

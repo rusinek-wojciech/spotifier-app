@@ -5,8 +5,8 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class UnicodePipe implements PipeTransform {
-  readonly regex = /&#x([A-Fa-f0-9]+);/g;
-  readonly hex = 16;
+  private readonly regex = /&#x([A-Fa-f0-9]+);/g;
+  private readonly hex = 16;
 
   transform(value?: string | null): string | undefined {
     if (typeof value !== 'string') return;

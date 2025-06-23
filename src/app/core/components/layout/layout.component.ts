@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -29,11 +29,11 @@ import { SpotifyApiHttpService } from '@app/shared/services';
   ],
 })
 export class LayoutComponent {
+  private readonly spotifyApiHttpService = inject(SpotifyApiHttpService);
+
   readonly PATHS = PATHS;
 
   user$ = this.spotifyApiHttpService
     .getCurrentUserProfile()
     .pipe(shareReplay(1));
-
-  constructor(private spotifyApiHttpService: SpotifyApiHttpService) {}
 }

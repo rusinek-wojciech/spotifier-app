@@ -8,15 +8,15 @@ export const globalInterceptor: HttpInterceptorFn = (req, next) => {
 
   return authService.token$.pipe(
     filter(token => !!token),
-    map(token => {
-      return req.clone({
+    map(token =>
+      req.clone({
         url: req.url,
         setHeaders: {
           Authorization: `Bearer ${token.accessToken}`,
           'Content-Type': 'application/json',
         },
-      });
-    }),
+      })
+    ),
     switchMap(req => next(req))
   );
 };

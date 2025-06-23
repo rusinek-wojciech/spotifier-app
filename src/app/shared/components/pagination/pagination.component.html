@@ -3,9 +3,9 @@
 </section>
 <mat-paginator
   (page)="handlePageEvent($event)"
-  [length]="length"
-  [pageSize]="pageSize"
+  [length]="length()"
+  [pageSize]="pageSize()"
   [showFirstLastButtons]="true"
   [hidePageSize]="false"
-  [pageIndex]="pageIndex"
-  [pageSizeOptions]="pageSizeOptions" />
+  [pageIndex]="pageIndex()"
+  [pageSizeOptions]="pageSizeOptions()" />

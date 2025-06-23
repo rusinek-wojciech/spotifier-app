@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, take, takeUntil } from 'rxjs';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Subject, take, takeUntil, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatGridListModule } from '@angular/material/grid-list';
 
@@ -19,52 +19,53 @@ import { PlaylistCardComponent } from '@app/views/playlist-card/playlist-card.co
   imports: [PaginationComponent, PlaylistCardComponent, MatGridListModule],
 })
 export class PlaylistComponent implements OnInit, OnDestroy {
-  private sub = new Subject<void>();
-  length: number = 0;
-  columns: number = 0;
-  playlists: SpotifyApi.PlaylistObjectSimplified[] = [];
+  private readonly spotifyApiHttpService = inject(SpotifyApiHttpService);
+  private readonly observer = inject(ObserverService);
+  private readonly router = inject(Router);
 
-  constructor(
-    private spotifyApiHttpService: SpotifyApiHttpService,
-    private observer: ObserverService,
-    private router: Router
-  ) {}
+  private readonly sub = new Subject<void>();
+
+  readonly length = signal(0);
+  readonly columns = signal(0);
+  readonly playlists = signal<SpotifyApi.PlaylistObjectSimplified[]>([]);
 
   ngOnInit(): void {
-    this.observer
-      .observe()
-      .pipe(takeUntil(this.sub))
-      .subscribe({
-        next: columns => {
-          this.columns = columns;
-        },
-      });
+    this.setColumns();
   }
 
-  handlePaginationChange(event: PaginationEvent) {
+  public handlePaginationChange(event: PaginationEvent) {
     this.getPlaylistsWithPagination(event);
   }
 
-  private getPlaylistsWithPagination(event: PaginationEvent) {
-    this.spotifyApiHttpService
-      .getListOfCurrentUserPlaylists(event)
-      .pipe(take(1))
-      .subscribe(({ items, total }) => {
-        this.playlists = items;
-        this.length = total;
-      });
-  }
-
-  image(playlist: SpotifyApi.PlaylistObjectSimplified): string {
-    return playlist.images[0].url;
-  }
-
-  handleClick(playlist: SpotifyApi.PlaylistObjectSimplified): void {
+  public handleClick(playlist: SpotifyApi.PlaylistObjectSimplified): void {
     this.router.navigate([PATHS.PLAYLIST, playlist.id]);
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.sub.next();
     this.sub.complete();
+  }
+
+  private setColumns(): void {
+    this.observer
+      .observe()
+      .pipe(
+        takeUntil(this.sub),
+        tap(columns => this.columns.set(columns))
+      )
+      .subscribe();
+  }
+
+  private getPlaylistsWithPagination(event: PaginationEvent): void {
+    this.spotifyApiHttpService
+      .getListOfCurrentUserPlaylists(event)
+      .pipe(
+        take(1),
+        tap(({ items, total }) => {
+          this.playlists.set(items);
+          this.length.set(total);
+        })
+      )
+      .subscribe();
   }
 }

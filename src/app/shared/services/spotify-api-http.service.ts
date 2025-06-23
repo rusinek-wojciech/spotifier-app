@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class SpotifyApiHttpService {
   private readonly root = 'https://api.spotify.com';
   private readonly http = inject(HttpClient);

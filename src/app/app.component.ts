@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { PATHS } from '@app/shared/constants';
-import { AuthService } from '@app/shared/services';
+import { AuthService, LoggerService } from '@app/shared/services';
 
 @Component({
   standalone: true,
@@ -10,22 +10,25 @@ import { AuthService } from '@app/shared/services';
   imports: [RouterModule],
 })
 export class AppComponent implements OnInit {
-  constructor(
-    private router: Router,
-    private auth: AuthService
-  ) {
+  private readonly router = inject(Router);
+  private readonly auth = inject(AuthService);
+  private readonly logger = inject(LoggerService);
+
+  constructor() {
     this.auth.initToken();
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.auth.localStorageTokenListener();
     this.auth.authenticate().subscribe({
       next: token => {
-        console.log('authenticate', token);
+        this.logger.log('authenticate', token);
+
         if (token) {
           this.auth.updateToken(token);
           return;
         }
+
         if (location.pathname !== PATHS.LOGIN) {
           this.router.navigate([PATHS.LOGIN]);
           return;

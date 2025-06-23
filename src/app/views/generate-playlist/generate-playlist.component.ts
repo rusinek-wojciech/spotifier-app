@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -9,17 +9,15 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
   imports: [ReactiveFormsModule],
 })
 export class GeneratePlaylistComponent {
-  form;
+  private readonly formBuilder = inject(FormBuilder);
 
-  constructor(private formBuilder: FormBuilder) {
-    this.form = this.formBuilder.group({
-      acousticness: 0,
-      energy: 0,
-      loudness: 0,
-    });
-  }
+  form = this.formBuilder.group({
+    acousticness: 0,
+    energy: 0,
+    loudness: 0,
+  });
 
-  onSubmit() {
+  public onSubmit() {
     console.log(this.form.value);
     // this.api.getRecommendations$({}).subscribe(recommendations => {});
   }

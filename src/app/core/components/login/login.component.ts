@@ -1,10 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+  untracked,
+} from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { Router } from '@angular/router';
 
 import { PATHS } from '@app/shared/constants';
-import { AuthService, SpotifyAuthHttpService } from '@app/shared/services';
+import {
+  AuthService,
+  LoggerService,
+  SpotifyAuthHttpService,
+} from '@app/shared/services';
 
 enum Status {
   MISSING = 'missing',
@@ -28,25 +39,26 @@ const messageByStatus = {
   imports: [CommonModule, MatCardModule],
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  private readonly redirectionDelay = 1000;
+  private readonly auth = inject(AuthService);
+  private readonly spotifyAuthHttpService = inject(SpotifyAuthHttpService);
+  private readonly router = inject(Router);
+  private readonly logger = inject(LoggerService);
+
   readonly Status = Status;
   readonly messageByStatus = messageByStatus;
+  readonly status = signal<Status>(Status.PENDING);
 
-  status = Status.PENDING;
-  timeoutId?: NodeJS.Timeout;
-
-  constructor(
-    private auth: AuthService,
-    private spotifyAuthHttpService: SpotifyAuthHttpService,
-    private router: Router
-  ) {}
+  private readonly redirectionDelay = 1000;
+  private timeoutId?: NodeJS.Timeout;
 
   ngOnInit() {
     this.auth.authorize().subscribe({
       next: token => {
-        console.log('authorize', token);
+        this.logger.log('authorize', token);
+
         if (token) {
-          this.status = Status.SUCCESS;
+          this.status.set(Status.SUCCESS);
+          clearTimeout(this.timeoutId);
           this.auth.updateToken(token);
           this.timeoutId = setTimeout(
             () => this.router.navigate([PATHS.HOME]),
@@ -54,12 +66,13 @@ export class LoginComponent implements OnInit, OnDestroy {
           );
           return;
         }
+
         this.auth.removeToken();
-        this.status = Status.MISSING;
+        this.status.set(Status.MISSING);
       },
       error: error => {
-        this.status = Status.FAILURE;
-        console.error(error);
+        this.status.set(Status.FAILURE);
+        this.logger.error(error);
         this.auth.removeToken();
       },
     });
@@ -70,7 +83,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   handleClick(): void {
-    if (this.status === Status.MISSING || this.status === Status.FAILURE) {
+    if (
+      untracked(this.status) === Status.MISSING ||
+      untracked(this.status) === Status.FAILURE
+    ) {
       this.spotifyAuthHttpService.authorization();
     }
   }
