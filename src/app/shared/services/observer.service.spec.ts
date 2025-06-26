@@ -1,11 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { ObserverService } from './observer.service';
 import {
   BreakpointObserver,
   BreakpointState,
   Breakpoints,
 } from '@angular/cdk/layout';
 import { Observable, of } from 'rxjs';
+
+import { ObserverService } from './observer.service';
 
 describe('ObserverService', () => {
   const breakpointsMock = {

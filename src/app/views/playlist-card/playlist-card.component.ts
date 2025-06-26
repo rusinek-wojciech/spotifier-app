@@ -1,11 +1,4 @@
-import {
-  Component,
-  computed,
-  inject,
-  input,
-  Input,
-  untracked,
-} from '@angular/core';
+import { Component, computed, inject, input, untracked } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 

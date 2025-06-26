@@ -4,8 +4,9 @@ import {
   CanActivateFn,
   RouterStateSnapshot,
 } from '@angular/router';
-import { AuthService } from '../services';
 import { map } from 'rxjs';
+
+import { AuthService } from '../services';
 
 export const authGuard: CanActivateFn = (
   _route: ActivatedRouteSnapshot,

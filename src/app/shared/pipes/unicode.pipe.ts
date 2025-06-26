@@ -9,7 +9,9 @@ export class UnicodePipe implements PipeTransform {
   private readonly hex = 16;
 
   transform(value?: string | null): string | undefined {
-    if (typeof value !== 'string') return;
+    if (typeof value !== 'string') {
+      return;
+    }
     return value.replace(this.regex, (_, s) =>
       String.fromCharCode(parseInt(s, this.hex))
     );

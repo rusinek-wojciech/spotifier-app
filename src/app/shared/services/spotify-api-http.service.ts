@@ -109,10 +109,10 @@ export class SpotifyApiHttpService {
     });
   }
 
-  getRecommendations(params: SpotifyApi.RecommendationsOptionsObject) {
+  getRecommendations(_params: SpotifyApi.RecommendationsOptionsObject) {
     return this.http.get<SpotifyApi.RecommendationsFromSeedsResponse>(
       `${this.root}/v1/recommendations`,
-      params as any
+      {}
     );
   }
 

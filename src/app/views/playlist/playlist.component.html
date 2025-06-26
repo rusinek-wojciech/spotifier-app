@@ -1,4 +1,4 @@
-<app-pagination [length]="length()" (onChange)="handlePaginationChange($event)">
+<app-pagination [length]="length()" (changed)="handlePaginationChange($event)">
   <mat-grid-list [cols]="columns()" gutterSize="1rem" rowHeight="4:5">
     @for (playlist of playlists(); track playlist) {
       <mat-grid-tile>

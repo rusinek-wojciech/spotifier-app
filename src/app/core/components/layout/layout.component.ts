@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
-import { shareReplay } from 'rxjs';
+import { shareReplay, Subject, takeUntil } from 'rxjs';
 
 import { UserAvatarComponent } from '@app/shared/components/user-avatar/user-avatar.component';
 import { PATHS } from '@app/shared/constants';
@@ -28,12 +28,18 @@ import { SpotifyApiHttpService } from '@app/shared/services';
     UserAvatarComponent,
   ],
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnDestroy {
   private readonly spotifyApiHttpService = inject(SpotifyApiHttpService);
+  private readonly destroy$ = new Subject<void>();
 
   readonly PATHS = PATHS;
 
-  user$ = this.spotifyApiHttpService
+  readonly user$ = this.spotifyApiHttpService
     .getCurrentUserProfile()
-    .pipe(shareReplay(1));
+    .pipe(takeUntil(this.destroy$), shareReplay(1));
+
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

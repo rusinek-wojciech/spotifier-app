@@ -5,9 +5,10 @@ import {
   HttpParams,
 } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
+
 import { REQUIRED_SCOPES } from '@app/shared/constants';
 import { RefreshTokenResponse, Token, TokenResponse } from '@app/shared/types';
-import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable()

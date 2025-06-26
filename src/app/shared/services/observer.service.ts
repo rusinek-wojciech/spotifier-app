@@ -42,7 +42,7 @@ export class ObserverService {
   }
 
   public findMatchingKey(br: BreakpointsType): string {
-    const [key, _value] = Object.entries(br).find(([_key, value]) => value)!;
+    const [key] = Object.entries(br).find(([_key, value]) => value)!;
     return key;
   }
 }

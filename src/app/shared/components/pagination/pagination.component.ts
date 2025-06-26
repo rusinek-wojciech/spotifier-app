@@ -1,4 +1,11 @@
-import { Component, input, output, signal, untracked } from '@angular/core';
+import {
+  Component,
+  input,
+  OnInit,
+  output,
+  signal,
+  untracked,
+} from '@angular/core';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 export interface PaginationEvent {
@@ -13,33 +20,32 @@ export interface PaginationEvent {
   standalone: true,
   imports: [MatPaginatorModule],
 })
-export class PaginationComponent {
+export class PaginationComponent implements OnInit {
   readonly pageIndex = signal(0);
   readonly pageSizeOptions = signal([10, 20, 50] as const);
   readonly pageSize = signal(20);
   readonly length = input(0);
-  readonly onChange = output<PaginationEvent>();
+  readonly changed = output<PaginationEvent>();
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.emitChange();
   }
 
-  public handlePageEvent(event: PageEvent) {
+  public handlePageEvent(event: PageEvent): void {
     this.pageIndex.set(event.pageIndex);
     this.pageSize.set(event.pageSize);
-
     this.scrollToTop();
     this.emitChange();
   }
 
-  private emitChange() {
-    this.onChange.emit({
+  private emitChange(): void {
+    this.changed.emit({
       limit: untracked(this.pageSize),
       offset: untracked(this.pageIndex) * untracked(this.pageSize),
     });
   }
 
-  private scrollToTop() {
+  private scrollToTop(): void {
     window.scroll({
       top: 0,
       left: 0,

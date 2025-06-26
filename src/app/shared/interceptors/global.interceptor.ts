@@ -1,7 +1,8 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { AuthService } from '@app/shared/services';
 import { filter, map, switchMap } from 'rxjs';
+
+import { AuthService } from '@app/shared/services';
 
 export const globalInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);

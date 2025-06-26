@@ -23,7 +23,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   private readonly observer = inject(ObserverService);
   private readonly router = inject(Router);
 
-  private readonly sub = new Subject<void>();
+  private readonly destroy$ = new Subject<void>();
 
   readonly length = signal(0);
   readonly columns = signal(0);
@@ -33,7 +33,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     this.setColumns();
   }
 
-  public handlePaginationChange(event: PaginationEvent) {
+  public handlePaginationChange(event: PaginationEvent): void {
     this.getPlaylistsWithPagination(event);
   }
 
@@ -42,15 +42,15 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this.sub.next();
-    this.sub.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private setColumns(): void {
     this.observer
       .observe()
       .pipe(
-        takeUntil(this.sub),
+        takeUntil(this.destroy$),
         tap(columns => this.columns.set(columns))
       )
       .subscribe();
@@ -60,6 +60,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     this.spotifyApiHttpService
       .getListOfCurrentUserPlaylists(event)
       .pipe(
+        takeUntil(this.destroy$),
         take(1),
         tap(({ items, total }) => {
           this.playlists.set(items);
