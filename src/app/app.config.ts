@@ -1,6 +1,18 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { Routes, provideRouter } from '@angular/router';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+
+import { globalInterceptor } from '@app/shared/interceptors/global.interceptor';
+import {
+  LocalStorageService,
+  LoggerService,
+  AuthService,
+  ObserverService,
+  SpotifyApiService,
+  SpotifyAuthService,
+} from '@app/shared/services';
+
 import { LayoutComponent } from './core/components/layout/layout.component';
 import { authGuard } from './shared/guards';
 import { HomeComponent } from './core/components/home/home.component';
@@ -9,16 +21,6 @@ import { TracklistComponent } from './views/tracklist/tracklist.component';
 import { GeneratePlaylistComponent } from './views/generate-playlist/generate-playlist.component';
 import { SettingsComponent } from './core/components/settings/settings.component';
 import { LoginComponent } from './core/components/login/login.component';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { globalInterceptor } from '@app/shared/interceptors/global.interceptor';
-import {
-  AuthService,
-  LocalStorageService,
-  LoggerService,
-  ObserverService,
-  SpotifyApiHttpService,
-  SpotifyAuthHttpService,
-} from '@app/shared/services';
 
 const routes: Routes = [
   {
@@ -74,7 +76,7 @@ export const appConfig: ApplicationConfig = {
     LoggerService,
     AuthService,
     ObserverService,
-    SpotifyApiHttpService,
-    SpotifyAuthHttpService,
+    SpotifyApiService,
+    SpotifyAuthService,
   ],
 };

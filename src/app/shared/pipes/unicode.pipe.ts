@@ -5,15 +5,13 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class UnicodePipe implements PipeTransform {
-  private readonly regex = /&#x([A-Fa-f0-9]+);/g;
-  private readonly hex = 16;
+  private readonly replacer = (_: unknown, s: string): string =>
+    String.fromCharCode(parseInt(s, 16));
 
   transform(value?: string | null): string | undefined {
     if (typeof value !== 'string') {
       return;
     }
-    return value.replace(this.regex, (_, s) =>
-      String.fromCharCode(parseInt(s, this.hex))
-    );
+    return value.replace(/&#x([A-Fa-f0-9]+);/g, this.replacer);
   }
 }

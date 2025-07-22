@@ -7,7 +7,7 @@ import {
   PaginationComponent,
   PaginationEvent,
 } from '@app/shared/components/pagination/pagination.component';
-import { ObserverService, SpotifyApiHttpService } from '@app/shared/services';
+import { ObserverService, SpotifyApiService } from '@app/shared/services';
 import { PATHS } from '@app/shared/constants';
 import { PlaylistCardComponent } from '@app/views/playlist-card/playlist-card.component';
 
@@ -19,7 +19,7 @@ import { PlaylistCardComponent } from '@app/views/playlist-card/playlist-card.co
   imports: [PaginationComponent, PlaylistCardComponent, MatGridListModule],
 })
 export class PlaylistComponent implements OnInit, OnDestroy {
-  private readonly spotifyApiHttpService = inject(SpotifyApiHttpService);
+  private readonly spotifyApiHttpService = inject(SpotifyApiService);
   private readonly observer = inject(ObserverService);
   private readonly router = inject(Router);
 

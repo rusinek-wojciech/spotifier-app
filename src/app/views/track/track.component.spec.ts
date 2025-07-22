@@ -2,17 +2,19 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TrackComponent } from './track.component';
 
-describe.skip('TrackComponent', () => {
+describe('TrackComponent', () => {
   let component: TrackComponent;
   let fixture: ComponentFixture<TrackComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TrackComponent],
+      imports: [TrackComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TrackComponent);
     component = fixture.componentInstance;
+
+    fixture.componentRef.setInput('track', {});
     fixture.detectChanges();
   });
 

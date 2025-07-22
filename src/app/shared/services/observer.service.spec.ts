@@ -4,7 +4,7 @@ import {
   BreakpointState,
   Breakpoints,
 } from '@angular/cdk/layout';
-import { Observable, of } from 'rxjs';
+import { firstValueFrom, Observable, of } from 'rxjs';
 
 import { ObserverService } from './observer.service';
 
@@ -42,12 +42,10 @@ describe('ObserverService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should observe breakpoints and return corresponding column number', done => {
+  it('should observe breakpoints and return corresponding column number', async () => {
+    const result = await firstValueFrom(service.observe());
     const expectedColumnNumber = 3;
-    service.observe().subscribe(result => {
-      expect(result).toBe(expectedColumnNumber);
-      done();
-    });
+    expect(result).toBe(expectedColumnNumber);
   });
 
   it('should find the matching key for a BreakpointState', () => {

@@ -67,7 +67,9 @@
     {
       "files": ["*.html"],
       "extends": ["plugin:@angular-eslint/template/recommended"],
-      "rules": {}
+      "rules": {
+        "import/namespace": "off"
+      }
     },
     {
       "files": ["*.spec.ts", "*.test.ts"],

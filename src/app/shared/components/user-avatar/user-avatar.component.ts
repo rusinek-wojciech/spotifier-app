@@ -7,6 +7,8 @@ import { RouterModule } from '@angular/router';
 import { PATHS } from '@app/shared/constants';
 import { AuthService } from '@app/shared/services';
 
+const DEFAULT_AVATAR = 'assets/images/avatar.png';
+
 @Component({
   selector: 'app-user-avatar',
   templateUrl: './user-avatar.component.html',
@@ -16,12 +18,11 @@ import { AuthService } from '@app/shared/services';
 })
 export class UserAvatarComponent {
   private readonly auth = inject(AuthService);
-  private readonly AVATAR = 'assets/images/avatar.png';
 
   readonly PATHS = PATHS;
   readonly user = input.required<SpotifyApi.CurrentUsersProfileResponse>();
   readonly avatarImage = computed(
-    () => `url(${this.user().images?.[0]?.url ?? this.AVATAR})`
+    () => `url(${this.user().images?.[0]?.url ?? DEFAULT_AVATAR})`
   );
 
   protected handleLogout(): void {

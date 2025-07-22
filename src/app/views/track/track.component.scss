@@ -3,6 +3,6 @@
   background-size: cover;
 }
 
-mat-card {
-  height: 100%;
+::ng-deep .mat-grid-tile-content {
+  justify-content: flex-start !important;
 }

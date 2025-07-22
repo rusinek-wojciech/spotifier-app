@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 
 @Injectable()
-export class SpotifyApiHttpService {
+export class SpotifyApiService {
   private readonly root = 'https://api.spotify.com';
   private readonly http = inject(HttpClient);
 

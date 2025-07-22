@@ -3,18 +3,17 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Observable, of, throwError, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-import {
-  LocalStorageService,
-  SpotifyAuthHttpService,
-} from '@app/shared/services';
+import { LocalStorageService, SpotifyAuthService } from '@app/shared/services';
 import { AuthorizationResponseParams, Token } from '@app/shared/types';
 import { LoggerService } from '@app/shared/services/logger.service';
+
+const AUTH_KEY = 'token';
 
 @Injectable()
 export class AuthService {
   private readonly logger = inject(LoggerService);
   private readonly route = inject(ActivatedRoute);
-  private readonly spotifyAuthHttpService = inject(SpotifyAuthHttpService);
+  private readonly spotifyAuthHttpService = inject(SpotifyAuthService);
   private readonly localStorageService = inject(LocalStorageService);
 
   private readonly tokenSubject = new BehaviorSubject<Token | undefined>(
@@ -27,7 +26,7 @@ export class AuthService {
     this.localStorageTokenListener();
   }
 
-  authorize(): Observable<Token | undefined> {
+  public authorize(): Observable<Token | undefined> {
     return of(
       this.route.snapshot.queryParams as AuthorizationResponseParams
     ).pipe(
@@ -43,7 +42,7 @@ export class AuthService {
     );
   }
 
-  authenticate(): Observable<Token | undefined> {
+  public authenticate(): Observable<Token | undefined> {
     return this.token$.pipe(
       switchMap(token =>
         token
@@ -55,11 +54,11 @@ export class AuthService {
     );
   }
 
-  localStorageTokenListener(): void {
+  public localStorageTokenListener(): void {
     window.addEventListener(
       'storage',
       event => {
-        if (event.key === 'token') {
+        if (event.key === AUTH_KEY) {
           this.removeToken();
         }
       },
@@ -67,23 +66,23 @@ export class AuthService {
     );
   }
 
-  initToken(): void {
+  public initToken(): void {
     this.logger.log('initToken');
-    const token = this.localStorageService.getItem('token');
+    const token = this.localStorageService.getItem(AUTH_KEY);
     token && !this.isExpired(token)
       ? this.updateToken(token)
       : this.removeToken();
   }
 
-  removeToken(): void {
+  public removeToken(): void {
     this.logger.log('removeToken');
-    this.localStorageService.removeItem('token');
+    this.localStorageService.removeItem(AUTH_KEY);
     this.tokenSubject.next(undefined);
   }
 
-  updateToken(token: Token): void {
+  public updateToken(token: Token): void {
     this.logger.log('updateToken');
-    this.localStorageService.setItem('token', token);
+    this.localStorageService.setItem(AUTH_KEY, token);
     this.tokenSubject.next(token);
   }
 

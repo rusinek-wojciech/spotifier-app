@@ -14,7 +14,7 @@ import { PATHS } from '@app/shared/constants';
 import {
   AuthService,
   LoggerService,
-  SpotifyAuthHttpService,
+  SpotifyAuthService,
 } from '@app/shared/services';
 
 enum Status {
@@ -40,7 +40,7 @@ const messageByStatus = {
 })
 export class LoginComponent implements OnInit, OnDestroy {
   private readonly auth = inject(AuthService);
-  private readonly spotifyAuthHttpService = inject(SpotifyAuthHttpService);
+  private readonly spotifyAuthHttpService = inject(SpotifyAuthService);
   private readonly router = inject(Router);
   private readonly logger = inject(LoggerService);
 

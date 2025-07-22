@@ -10,7 +10,7 @@ import { shareReplay, Subject, takeUntil } from 'rxjs';
 
 import { UserAvatarComponent } from '@app/shared/components/user-avatar/user-avatar.component';
 import { PATHS } from '@app/shared/constants';
-import { SpotifyApiHttpService } from '@app/shared/services';
+import { SpotifyApiService } from '@app/shared/services';
 
 @Component({
   selector: 'app-layout',
@@ -29,7 +29,7 @@ import { SpotifyApiHttpService } from '@app/shared/services';
   ],
 })
 export class LayoutComponent implements OnDestroy {
-  private readonly spotifyApiHttpService = inject(SpotifyApiHttpService);
+  private readonly spotifyApiHttpService = inject(SpotifyApiService);
   private readonly destroy$ = new Subject<void>();
 
   readonly PATHS = PATHS;

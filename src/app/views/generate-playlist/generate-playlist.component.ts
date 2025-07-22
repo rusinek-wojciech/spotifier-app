@@ -17,7 +17,7 @@ export class GeneratePlaylistComponent {
     loudness: 0,
   });
 
-  public onSubmit() {
+  public onSubmit(): void {
     console.log(this.form.value);
     // this.api.getRecommendations$({}).subscribe(recommendations => {});
   }

@@ -1,2 +1,2 @@
 export * from './required-scopes.constant';
-export * from './paths.constants';
+export * from './paths.constant';

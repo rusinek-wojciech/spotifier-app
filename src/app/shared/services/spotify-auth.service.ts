@@ -12,7 +12,7 @@ import { RefreshTokenResponse, Token, TokenResponse } from '@app/shared/types';
 import { environment } from 'src/environments/environment';
 
 @Injectable()
-export class SpotifyAuthHttpService {
+export class SpotifyAuthService {
   private readonly root = 'https://accounts.spotify.com';
   private readonly httpBackend = inject(HttpBackend);
   private readonly http = new HttpClient(this.httpBackend);

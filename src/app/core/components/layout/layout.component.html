@@ -4,7 +4,9 @@
       <mat-icon [fontIcon]="drawer.opened ? 'close' : 'menu'" />
     </button>
     <span class="spacer"></span>
-    <app-user-avatar *ngIf="user$ | async as user" [user]="user" />
+    @if (user$ | async; as user) {
+      <app-user-avatar [user]="user" />
+    }
   </mat-toolbar-row>
 </mat-toolbar>
 

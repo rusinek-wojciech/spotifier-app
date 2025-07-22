@@ -13,6 +13,5 @@ export const authGuard: CanActivateFn = (
   _state: RouterStateSnapshot
 ) => {
   const auth = inject(AuthService);
-
   return auth.token$.pipe(map(token => !!token));
 };
